@@ -9,6 +9,6 @@ Daarnaast hoort ook het maken van automations bij dit subdoel.
 
 ## powersupply script
 
-Een script gemaakt om aan de hand van mqtt de waarden van een voeding aan te passen. Dit gebeurt met USB aan de hand SCPI commands.
+Een script om aan de hand van mqtt de waarden van een voeding aan te passen. Dit gebeurt met USB aan de hand van SCPI commands.
 
 [powersupply repo](https://github.com/vives-project-xp/Iot-lab_powersupply_script)
