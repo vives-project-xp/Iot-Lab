@@ -13,6 +13,10 @@ Aan de hand van home assistant zullen we de uitgelezen waarden van de digitale m
 De presence detection zal gebeuren aan de hand van MAC adressen en ubiquiti access points, de status monitoring aan de hand van pings binnen home assistant en het aansturen van de leds met WLED.
 Het maken van de automations gebeurt ook binnen home assistant.
 
+## Dashboard schets (idee)
+
+![dashboard schets](/img/idea_dashboard.png)
+
 ## powersupply script
 
 Een script om aan de hand van mqtt de waarden van een voeding aan te passen. Dit gebeurt met USB aan de hand van SCPI commands.
