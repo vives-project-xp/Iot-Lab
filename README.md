@@ -64,4 +64,36 @@ Voor whatsapp kan je de [callmebot](https://www.callmebot.com/blog/whatsapp-text
 
 #### toevoegen van sensoren, switches, ... aan home assistant
 
-####
+#### mqtt
+
+1. mqtt broker binnen home assistant
+2. publish vanuit home assistant  
+switch: om een switch toe te voegen die zijn state published naar mqtt moet je volgende code toevoegen aan configuration.yaml
+```txt
+switch:
+  - platform: mqtt
+    name: "{naam van de entity}"
+    state_topic: "{topic om naar te publishen}"
+    command_topic: "{topic om op te subscriben om updates te ontvangen}"
+    qos: {te gebruiken mqqt qos, wij gebruiken 1}
+    payload_on: "{wat te versturen wanneer de swith aan is}"
+    payload_off: "{wat te versturen wanneer de swith uit is}"
+    retain: {wanneer retain true is wordt na subscription onmiddelijk ontvangen wat de huidige state van de switch moet zijn}
+```
+input: om een input te publishen naar mqtt maken we gebruik van de mqtt.publish service, hiervoor moet in automations.yaml een automation toegevoegd worden.
+voorbeeld slider
+```txt
+- id: '1665648904981'
+  alias: powersupply current
+  description: ''
+  trigger:
+  - entity_id: input_number.current_slider (de slider waarvan de waarde moet gepublished worden)
+    platform: state (wanneer de state veranderd publishen wa de waarde)
+  action:
+  - service: mqtt.publish
+    data:
+      payload_template: '{{ states(''input_number.current_slider'') | float }}' (wat we zullen publishen en het type ervan)
+      topic: current (naar welke topic het moet gepublished worden)
+      retain: false
+```
+3. subscribe vanuit home assistant
