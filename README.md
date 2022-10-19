@@ -17,6 +17,10 @@ Het maken van de automations gebeurt ook binnen home assistant.
 
 ![dashboard schets](/img/idea_dashboard.png)
 
+# Dag van de wetenschap
+
+[DVDW](Dag_Van_De_Wetenschap.md)
+
 ## Documentatie
 
 ### powersupply script
@@ -68,7 +72,8 @@ Voor whatsapp kan je de [callmebot](https://www.callmebot.com/blog/whatsapp-text
 
 1. mqtt broker binnen home assistant
 2. publish vanuit home assistant  
-switch: om een switch toe te voegen die zijn state published naar mqtt moet je volgende code toevoegen aan configuration.yaml
+   switch: om een switch toe te voegen die zijn state published naar mqtt moet je volgende code toevoegen aan configuration.yaml
+
 ```txt
 switch:
   - platform: mqtt
@@ -80,8 +85,10 @@ switch:
     payload_off: "{wat te versturen wanneer de swith uit is}"
     retain: {wanneer retain true is wordt na subscription onmiddelijk ontvangen wat de huidige state van de switch moet zijn}
 ```
+
 input: om een input te publishen naar mqtt maken we gebruik van de mqtt.publish service, hiervoor moet in automations.yaml een automation toegevoegd worden.
 voorbeeld slider
+
 ```txt
 - id: '1665648904981'
   alias: powersupply current
@@ -96,4 +103,5 @@ voorbeeld slider
       topic: current (naar welke topic het moet gepublished worden)
       retain: false
 ```
+
 3. subscribe vanuit home assistant
