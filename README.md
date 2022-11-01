@@ -70,8 +70,19 @@ Voor whatsapp kan je de [callmebot](https://www.callmebot.com/blog/whatsapp-text
 
 #### mqtt
 
-1. mqtt broker binnen home assistant  
-  !!!! HIER MOET NOG KOMEN HOE JE EEN MQTT BROKER OPZET BINNEN HASS !!!!!
+1. mqtt broker binnen home assistant
+
+   1. install Mosquitto broker in add-on store.
+   2. Go to settings. People -> users
+   3. Add user
+   4. Display: mqttuser
+   5. username: mqttuser
+   6. Password:
+   7. Reboot.
+   8. Go to devices and configure
+
+   ![Mqtt](./img/Mqtt.png)
+
 2. publish vanuit home assistant  
    switch: om een switch toe te voegen die zijn state published naar mqtt moet je volgende code toevoegen aan configuration.yaml
 
@@ -126,8 +137,30 @@ voorbeeld slider
       retain: false
 ```
 
-3. subscribe vanuit home assistant  
-  !!!! HIER MOET NOG KOMEN HOE JE SUBSCRIBED OP EEN TOPIC BINNEN HASS !!!!!
+3. subscribe vanuit home assistant
+
+```text
+Configuration.yaml
+
+- platform: mqtt
+  name: "consumption_low_tarif"
+  unit_of_measurement: 'kWh'
+  state_topic: "iot/myhome/cdem/consumption_low_tarif"
+  unique_id: "consumption_low_tarif"
+  value_template: "{{ value|float}}"
+  state_class: measurement
+  device_class: energy
+```
+
+```text
+customize.yaml
+
+sensor.consumption_high_tarif:
+    last_reset: "1970-01-01T00:00:00+00:00"
+sensor.consumption_low_tarif:
+    last_reset: "1970-01-01T00:00:00+00:00"
+
+```
 
 ### Home assistant dashboards
 
