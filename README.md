@@ -266,3 +266,37 @@ Layout-card bied 3 nieuwe view types aan voor ons dashboard: Horizontal, Vertica
 Apexcharts staat ons toe om mooiere grafieken toe te voegen aan ons dashboard. Persoonlijk hebben wij het gebruikt om een grafiek van de stroom van onze voeding te tonen.
 
 ![apexcharts grafiek](/img/clean_graph.png)
+
+## Home Assistant Grafana Dashboard
+
+### Influxdb
+
+1. add Influxdb on add-on store
+
+```yml
+configuration.yml
+
+influxdb:
+  host: 192.168.1.131 // IP of  Home Assistant device
+  port: 8086
+  database: iot_lab
+  username: iot
+  password: ######
+  max_retries: 3
+  default_measurement: state
+```
+
+### Node Red
+
+1. Install Node-red in Add-on
+2. Add node-red-contrib-influxdb
+
+3. Add [Flow](./Node_red/flows.json)
+
+### Grafana
+
+1. Add data Source
+2. Choose InfluxDb
+3. Add URL : ip of device
+4. Choose database
+5. user iot
