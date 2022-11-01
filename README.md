@@ -70,20 +70,42 @@ Voor whatsapp kan je de [callmebot](https://www.callmebot.com/blog/whatsapp-text
 
 #### mqtt
 
-1. mqtt broker binnen home assistant
+1. mqtt broker binnen home assistant  
+  !!!! HIER MOET NOG KOMEN HOE JE EEN MQTT BROKER OPZET BINNEN HASS !!!!!
 2. publish vanuit home assistant  
    switch: om een switch toe te voegen die zijn state published naar mqtt moet je volgende code toevoegen aan configuration.yaml
 
 ```txt
-switch:
-  - platform: mqtt
-    name: "{naam van de entity}"
-    state_topic: "{topic om naar te publishen}"
-    command_topic: "{topic om op te subscriben om updates te ontvangen}"
-    qos: {te gebruiken mqqt qos, wij gebruiken 1}
-    payload_on: "{wat te versturen wanneer de swith aan is}"
-    payload_off: "{wat te versturen wanneer de swith uit is}"
-    retain: {wanneer retain true is wordt na subscription onmiddelijk ontvangen wat de huidige state van de switch moet zijn}
+  name: "{naam van de entity}"
+  state_topic: "{topic om naar te publishen}"
+  command_topic: "{topic om op te subscriben om updates te ontvangen}"
+  qos: {te gebruiken mqqt qos, wij gebruiken 1}
+  payload_on: "{wat te versturen wanneer de swith aan is}"
+  payload_off: "{wat te versturen wanneer de swith uit is}"
+  retain: {wanneer retain true is wordt na subscription onmiddelijk ontvangen wat de huidige state van de switch moet zijn}
+
+mqtt:
+    broker: 127.0.0.1
+    port: 1883
+    client_id: home-assistant
+    keepalive: 60
+    switch:
+      - unique_id: powersupply_switch
+        name: "powersupply switch"
+        state_topic: "state"
+        command_topic: "state"
+        payload_on: "on"
+        payload_off: "off"
+        qos: 1
+        retain: true
+      - unique_id: current_effect_switch
+        name: "current effect switch"
+        state_topic: "currentEffect"
+        command_topic: "currentEffect"
+        qos: 1
+        payload_on: "on"
+        payload_off: "off"
+        retain: true
 ```
 
 input: om een input te publishen naar mqtt maken we gebruik van de mqtt.publish service, hiervoor moet in automations.yaml een automation toegevoegd worden.
@@ -104,4 +126,110 @@ voorbeeld slider
       retain: false
 ```
 
-3. subscribe vanuit home assistant
+3. subscribe vanuit home assistant  
+  !!!! HIER MOET NOG KOMEN HOE JE SUBSCRIBED OP EEN TOPIC BINNEN HASS !!!!!
+
+### Home assistant dashboards
+
+Voor het maken van onze dashboards hebben we gebruik gemaakt van een aantal add-ons.
+Om de add-ons te installeren maken we gebruik van HACS.
+
+1. Ga naar de Add-on store
+2. Installeer een SSH add-on, bijvoorbeeld "Terminal & SSH" (Om deze add-ons te zien moet je advanced mode aanzetten in je user profile)
+3. Configureer je gekozen add-on volgens de documentatie van de add-on
+4. Start de SSH add-on
+5. Connecteer met de SSH add-on
+6. Run het volgende command
+
+```txt
+wget -O - https://get.hacs.xyz | bash -
+```
+
+Wanneer HACS geïnstalleerd is komt het in je sidebar. Selecteer het in je sidebar en klik op Frontend voor dashboard/styling add-ons.
+Voor onze dashboards hebben we gebruik gemaakt van Mushroom cards, layout-card, card-mod en apexcharts-card.
+
+#### Mushroom cards
+
+Van Mushroom cards hebben we gebruik gemaakt van de grid cards om het plaatsen van cards in de juiste volgorde en in bepaalde kolommen makkelijker te maken.
+Hieronder voorbeeld code van een grid card met het resultaat eronder. In dit voorbeeld hebben we twee kolommen waarin telkens cards zitten. In de eerste kolom zit er daarnaast nog een grid card met 3 kolommen om de status van de knoppen van onze verschillende verbruikers te tonen.
+
+```text
+square: false
+columns: 2
+type: grid
+cards:
+  - square: false
+    columns: 1
+    type: grid
+    cards:
+      - type: custom:mushroom-title-card
+        title: Dag van de wetenschap
+      - type: entities
+        entities:
+          - entity: switch.powersupply_switch
+          - entity: switch.current_effect_switch
+          - entity: input_number.voltage_slider
+          - entity: input_number.current_slider
+        state_color: true
+      - type: grid
+        cards:
+          - type: button
+            tap_action:
+              action: toggle
+            entity: switch.scherm_mat
+          - type: button
+            tap_action:
+              action: toggle
+            entity: switch.scherm_mat
+          - type: button
+            tap_action:
+              action: toggle
+            entity: switch.scherm_mat
+      - type: custom:apexcharts-card
+        graph_span: 5m
+        update_interval: 2s
+        span:
+          start: minute
+          offset: '-2m'
+        header:
+          show: true
+          title: Stroom
+          show_states: true
+          colorize_states: true
+        series:
+          - entity: sensor.currunt
+  - square: false
+    columns: 1
+    type: grid
+    cards:
+      - type: custom:mushroom-title-card
+        title: Iot lab
+      - type: entities
+        entities:
+          - entity: sensor.lumi_lumi_weather_humidity
+          - entity: sensor.lumi_lumi_weather_temperature
+          - entity: sensor.lumi_lumi_weather_pressure
+      - type: history-graph
+        entities:
+          - entity: binary_sensor.google_test
+        title: Google
+      - type: history-graph
+        entities:
+          - entity: binary_sensor.youtube_test
+        title: Youtube
+```
+
+![example grid card](/img/grid_mushroom.png)
+
+#### layout-card
+
+Layout-card bied 3 nieuwe view types aan voor ons dashboard: Horizontal, Vertical en Grid. Wij hebben hiervan gebruik gemaakt van grid. Hieronder het verschil tussen de default view type en grid view type van layout-card.
+
+![grid view](/img/grid_mushroom.png)
+![default view](/img/default_layout.png)
+
+#### apexcharts-card
+
+Apexcharts staat ons toe om mooiere grafieken toe te voegen aan ons dashboard. Persoonlijk hebben wij het gebruikt om een grafiek van de stroom van onze voeding te tonen.
+
+![apexcharts grafiek](/img/clean_graph.png)
