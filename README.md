@@ -26,6 +26,7 @@ Het maken van de automations gebeurt ook binnen home assistant.
 ### powersupply script
 
 Een script om aan de hand van mqtt de waarden van een voeding aan te passen. Dit gebeurt met USB aan de hand van SCPI commands.
+Aan de hand van het script kan met mqtt de stroom, spanning geregeld worden. Ten laatste kan een sinus gebruikt worden om de stroom te bepalen, op deze manier wordt een soort dag en nacht cyclus gesimuleerd.
 
 [powersupply repo documentatie](https://github.com/vives-project-xp/Iot-lab_powersupply_script)
 
@@ -266,6 +267,10 @@ Layout-card bied 3 nieuwe view types aan voor ons dashboard: Horizontal, Vertica
 Apexcharts staat ons toe om mooiere grafieken toe te voegen aan ons dashboard. Persoonlijk hebben wij het gebruikt om een grafiek van de stroom van onze voeding te tonen.
 
 ![apexcharts grafiek](/img/clean_graph.png)
+
+#### themes
+
+Voor onze dashboards hebben we gebruik gemaakt van ... voor onze themes. Deze themes hebben allemaal zowel een light als dark versie.
 
 ## Home Assistant Grafana Dashboard
 
