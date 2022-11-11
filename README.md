@@ -446,6 +446,18 @@ type: entity
 entity: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
 ```
 
+#### Battery levels dashboard
+
+Een simpele dashboard die de battery levels van sensoren met een batterij toont.
+
+![battery dashboard](/img/battery_dash.png)
+
+Er wordt in dit dashboard gebruik gemaakt van simpele entity cards.
+
+```yaml
+type: entity
+entity: sensor.lumi_lumi_weather_battery
+```
 
 
 ## Home Assistant Grafana Dashboard
