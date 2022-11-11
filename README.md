@@ -272,6 +272,78 @@ Apexcharts staat ons toe om mooiere grafieken toe te voegen aan ons dashboard. P
 
 Voor onze dashboards hebben we gebruik gemaakt van ... voor onze themes. Deze themes hebben allemaal zowel een light als dark versie.
 
+### Onze dashboards
+
+Om onze dashboards te maken hebben telkens gebruik gemaakt van één grote grid card. Ook staat de view type telkens op grid type van de layout-card add-on.
+
+#### DVDW
+
+Dit is het dashboard dat enkel gebruikt wordt voor dag van de wetenschap.
+Het bestaat uit een button naar het DVDW & Iot_lab dashboard. Deze button kan gebruikt worden moest er op de dag van de wetenschap meer controle nodig zijn over de voeding. Zo kunnen we hier bijvoorbeeld wel de voeding manueel aan en uit zetten, het sinus effect uitzetten en de spanning en stroom regelen. Ten tweede wordt er op het dashboard getoond wat de huidige stroom van de voeding is, de huidige productie en de huidige consumptie. Daarnaast is er een weergave van alle actieve toestellen, dit zijn de toestellen die we simuleren aan de hand van onze bouwlampen (bv. koffiezet, broodrooster,...). Daarnaast staat er een energy card op, ""momenteel zijn er hier echter nog problemen mee."" Ten laatste bevindt er zich op dit dashboard een icon/card die toont of het in de simulatie van de dag met de sinus dag of nacht is.
+
+![dashboard DVDW](/img/DVDW.png)
+
+1. Navigation button
+Een button zonder entity met een navigate tap_action naar de gewenste pagina/dashboard.
+
+```yaml
+show_name: true
+show_icon: true
+type: button
+tap_action:
+  action: navigate
+  navigation_path: ../clean-dashboard
+name: Advanced dashboard
+icon: mdi:atom
+```
+
+2. productie, consumptie en stroom card
+Dit is een simpele entities card waaraan alle gewenste entities toegevoegd zijn.
+
+```yaml
+type: entities
+entities:
+  - entity: sensor.currunt
+    name: stroom
+  - entity: sensor.l1_power_production
+    name: productie
+    icon: mdi:lightning-bolt
+  - entity: sensor.l1_power_consumption
+    name: consumptie
+    icon: mdi:lightning-bolt
+```
+
+3. energy card
+Dit is een card die linkt naar het energy dashboard.
+
+```yaml
+title: Energy distribution
+type: energy-distribution
+link_dashboard: 'true'
+```
+
+4. Actieve toestellen
+
+!!!!  
+NOG ONDER DEVELOPMENT  
+!!!!  
+
+5. Card die dag of nacht toont aan de hand van een icon
+
+!!!!  
+NOG ONDER DEVELOPMENT  
+!!!!  
+
+#### DVDW & IOT_LAB
+
+Dit dashboard bestaat uit twee kolommen, één voor DVDW en één voor alles IOT_LAB.
+De eerste kolom is deze voor DVDW deze verschilt van het DVDW doordat er zoals eerder verteld meer controle is over de voeding, daarnaast worden er ook meer gegevens getoond zoals een grafiek van de stroom van de voeding. In beide kolommen bevindt er zich eerst een titel, maar bij de kolom van DVDW staat er hiernaast ook nog een button die gaat naar het DVDW dashboard. Deze button is bedoeld als een back button, deze kan namelijk gebruikt worden als er op DVDW meer controle over de voeding nodig was en we daarna terug willen naar het simpelere dashboard. Vervolgens staat er een card waarmee de voeding kan bestuurd worden deze kan uitgezet worden, de stroom en spanning kan aangepast worden en het sinus effect kan aan en uitgezet worden. Hierna is er een card waarmee we de verschillende bouwlampen kunnen aan en uit zetten. Ten laatste staat er een grafiek die de verandering van de stroom volgt.
+
+In de IOT_LAB kolom bevindt er zich eerst een card die de waarden van de verschillende weather sensors toont. Het toont de vochtigheid, druk en temperatuur van het lokaal. Vervolgens zijn er een aantal cards die de state van de verschillende sites/services tonen. Ten laatste is er nog een card die de status van de door sensor toont.
+
+![dashboard deel 1](/img/DVDW&IOT_LAB_1.png)
+![dashboard deel 2](/img/DVDW&IOT_LAB_2.png)
+
 ## Home Assistant Grafana Dashboard
 
 ### Influxdb
