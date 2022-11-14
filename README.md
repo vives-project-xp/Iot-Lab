@@ -11,7 +11,7 @@ Daarnaast hoort ook het maken van automations bij dit subdoel.
 
 Aan de hand van home assistant zullen we de uitgelezen waarden van de digitale meter weergeven. Deze worden uitgelezen van een mqtt broker.
 De presence detection zal gebeuren aan de hand van MAC adressen en ubiquiti access points, de status monitoring aan de hand van pings binnen home assistant en het aansturen van de leds met WLED.
-Het maken van de automations gebeurt ook binnen home assistant.
+Het maken van de automations gebeurt ook binnen home assistant, er kan echter wel binnen home assistant gebruik gemaakt worden van nodeRED.
 
 ## Dashboard schets (idee)
 
@@ -26,7 +26,7 @@ Het maken van de automations gebeurt ook binnen home assistant.
 ### powersupply script
 
 Een script om aan de hand van mqtt de waarden van een voeding aan te passen. Dit gebeurt met USB aan de hand van SCPI commands.
-Aan de hand van het script kan met mqtt de stroom, spanning geregeld worden. Ten laatste kan een sinus gebruikt worden om de stroom te bepalen, op deze manier wordt een soort dag en nacht cyclus gesimuleerd.
+Aan de hand van het script kan met mqtt de stroom, spanning geregeld worden. Ten laatste kan een sinus gebruikt worden om de stroom te bepalen, op deze manier wordt een dag en nacht cyclus gesimuleerd.
 
 [powersupply repo documentatie](https://github.com/vives-project-xp/Iot-lab_powersupply_script)
 
@@ -323,16 +323,69 @@ link_dashboard: 'true'
 ```
 
 4. Actieve toestellen
+Dit is een card die alle huidige actieve toestellen toont. Om te voorkomen dat de switch vanuit deze card kan aan of uit gezet worden maken we gebruik van een template switch.
+Hierin maken we van de switch een binary_sensor i.p.v. een switch.
 
-!!!!  
-NOG ONDER DEVELOPMENT  
-!!!!  
+```yaml
+template:
+  - binary_sensor:
+      - name: "blocked_switch"
+        state: >
+          {{ is_state('switch.powersupply_switch', 'on') }}
+```
+
+De state van de blocked switch wordt in dit voorbeeld bepaald door de powersupply_switch. Hier zal de state False of True zijn. Dus als de powersupply switch on is wordt de blocked switch True en als de switch off is False.
+
+Om de verschillende actieve toestellen in de card te zetten maken we gebruik van auto-entities.
+Om dit te installeren ga je naar het HACS dashboard -> frontend en zoek auto-entities op en klik vervolgens op install. Het is mogelijk dat je hierna de home assistant moet restarten om de add-on te laten werken.
+We selecteren add filter group, dan selecteren we de property entity ID en de gewenste template switch, vervolgens klikken we bij property op entity state en dan selecteren we on.
+
+Voorbeeld YAML code
+
+```yaml
+type: custom:auto-entities
+card:
+  type: entities
+  title: Actieve toestellen
+filter:
+  include:
+    - entity_id: binary_sensor.blocked_switch
+      state: 'on'
+  exclude: []
+show_empty: true
+```
+
+![actieve toestellen](/img/actieve_toestellen.png)
 
 5. Card die dag of nacht toont aan de hand van een icon
+Dit is een card die toont of het op dit moment in de simulatie dag of nacht is. We maken hiervoor gebruik van een switch met een icon_template om de icon te veranderen.
 
-!!!!  
-NOG ONDER DEVELOPMENT  
-!!!!  
+```yaml
+switch:
+  - platform: template
+    switches:
+      icon:
+        value_template: "{{ is_state('switch.powersupply_switch', 'on') }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.powersupply_switch
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.powersupply_switch
+        icon_template: >-
+          {% if is_state('switch.powersupply_switch', 'on') %}
+            mdi:weather-sunny
+          {% else %}
+            mdi:moon-waning-crescent
+          {% endif %}
+```
+
+![zon](/img/simulatie_dag.png)
+![maan](/img/simulatie_nacht.png)
+
+Met value_template zorgen we ervoor dat de switch de on state krijgt wanneer de powersupply switch aan is en het dus ook dag is. Met icon_template zorgen we ervoor dat wanneer de powersupply switch aan is de nieuwe "icon" switch een sun icon krijgt en anders een moon icon.
 
 #### DVDW & IOT_LAB
 
