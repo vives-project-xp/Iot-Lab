@@ -34,6 +34,13 @@ Aan de hand van het script kan met mqtt de stroom, spanning geregeld worden. Ten
 
 #### status monitoring
 
+1. thumfi.be -> met ook de 4 die in de balk staan erbij
+2. app.thumfi.be
+3. landing.thumfi.be
+4. dust.devbitapp.be
+5. graduaat.thumfi.be
+6. vives.be
+
 Status monitoring van services/sites kan binnen home assistant uitgevoerd worden aan de hand van de ping service.
 Om een site/service te monitoren voeg je in configuration.yaml een site volgens onderstaande template toe onder binary_sensor.
 Om in configuration.yaml te kunnen bewerken moet je de file editor add-on installeren. Ga hiervoor naar instellingen -> add-ons -> add-on store -> official add-ons -> file editor. Selecteer bij het installeren show in sidebar, na het installeren verschijnt de add on nu in de sidebar en kan je configuration.yaml bewerken.
