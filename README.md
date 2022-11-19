@@ -2,16 +2,16 @@
 
 ## Wat
 
-Het hoofddoel van dit project is om op een interactieve manier mensen toe te lichten over verbruik.
-Een subdoel hierbij is om een lokaal smart te maken, hierin kan het hoofddoel dan verwerkt worden in een home assistant dashboard.
-Onder dit subdoel horen presence detection, status monitoring van sites, het tonen van verbruik met leds en tonen van waarden die sensoren uitlezen.
-Daarnaast hoort ook het maken van automations bij dit subdoel.
+Ons project bestaat uit twee delen. Ten eerste is er het deel van DVDW en daarnaast is er het Iot Lab gedeelte. Met het DVDW deel willen we op een interactieve manier mensen in lichten over verbruik van toestellen. Om de productie realistisch te maken wordt een dag gesimuleerd.
+
+Het Iot lab gedeelte gaat dan meer over het smart maken van het lokaal. Voorbeelden van het smart maken van het lokaal zijn presence detection, status monitoring van sites/services, tonen van waarden die sensoren uitlezen om zo meer informatie te hebben over bepaalde zaken.
+
+Deze twee doelen kunnen dus vrij verweven zijn met elkaar. We kunnen namelijk bijvoorbeeld in het Iot lab het verbruik en de productie binnen het lokaal tonen. Aan de hand hiervan kunnen dan zaken gebeuren, zoals het uitzetten van toestellen. Ook kunnen we aan de hand van leds tonen hoe groot het verbruik is.
 
 ## Hoe
 
-Aan de hand van home assistant zullen we de uitgelezen waarden van de digitale meter weergeven. Deze worden uitgelezen van een mqtt broker.
-De presence detection zal gebeuren aan de hand van MAC adressen en ubiquiti access points, de status monitoring aan de hand van pings binnen home assistant en het aansturen van de leds met WLED.
-Het maken van de automations gebeurt ook binnen home assistant, er kan echter wel binnen home assistant gebruik gemaakt worden van nodeRED.
+Voor beide gedeeltes wordt gebruik gemaakt van home assistant. Binnen home assistant wordt gebruik gemaakt van grafana en influxDB om de waarden van de digitale meter van een mqtt broker te halen en te tonen. Deze waarden worden verstuurd door een CDEM bord. Om de dag te simuleren wordt een python script gebruikt die een voeding aanstuurt. De consumptie wordt gestuurd aan de hand van de stroom van de voeding, we zorgen ervoor dat deze ongeveer een sinusvorm volgt. Er is in deze sinus ook een moment waarop de voeding wordt uitgeschakeld om de nacht te simuleren.
+Voor de status monitoring van sites zullen we gebruik maken van de ping service binnen home assistant, en voor het aansturen van de leds die het verbruik tonen wordt gebruik gemaakt van WLED. Ten laatste wordt ook gebruik gemaakt van automations binnen home assistant of in node red om actions uit te voeren wanneer er iets gebeurt(bv. een waarde gaat boven een bepaald niveau).
 
 ## Dashboard schets (idee)
 
