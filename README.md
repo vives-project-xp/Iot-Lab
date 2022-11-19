@@ -47,6 +47,34 @@ Aan de hand van het script kan met mqtt de stroom, spanning geregeld worden. Ten
 
 Het is ook mogelijk om home assistant in een docker container te draaien volg hiervoor de instructies op de volgende [pagina](https://www.home-assistant.io/installation/raspberrypi/#install-home-assistant-container). Voor ons project is het echter logischer om het op een pi te draaien.
 
+#### gebruikte add-ons
+
+1. File editor
+Aan de hand deze add-on kunnen de files van de home assistant aangepast worden. Dit is zeer handig voor het toevoegen van sensoren, services,... aan configuration.yaml en ook om ongebruikte automations aan te passen aan de hand van yaml, deze kunnen namelijk binnen home assistant enkel gevonden worden als ze al getriggered zijn.
+2. Grafana en influxDB
+influxDB staat ons toe om een database te gebruiken binnen home assistant die de verschillende waarden die de CDEM opstuurt van de digitale meter op te slaan.
+Aan de hand van Grafana kunnen we dan op een dashboard de huidige consumptie, huidige productie en grafieken van deze waarden tonen.
+3. mosquitto broker
+Laat ons toe om een mosquitto broker op de home assistant te laten lopen
+4. Node-RED
+Laat ons toe om Node-RED te gebruiken op de home assistant. Dit wordt primair gebruikt om de data die binnenkomt van de cdem op de broker in de database te plaatsen. Het kan echter ook gebruikt worden voor automaties, die binnen home assistant moeilijk te maken zijn.
+5. Z-Wave JS
+Laat home assistant toe om aan de hand van een USB-controller met Z-Wave toestellen te communiceren.
+6. Tailscale
+Aan de hand van tailscale kan een VPN opgezet worden naar de home assistant pi. Dit hebben wij gebruikt om aan het project te kunnen werken van op afstand.
+7. Terminal & SSH
+Laat ons toe om de home assistant te besturen aan de hand van de terminal
+
+#### home assistant integrations
+
+1. google assistant
+De google assistant laat toe om zaken aan te sturen aan de hand van google assistant vanop de gsm, tablet of google home.
+2. google calendar
+Laat toe om je google calendar te verbinden met home assistant. De integration voegt de calendar dashboard en calendar entities toe. Aan de hand van deze calendar entities kunne automaties aangemaakt worden.
+3. WLED
+WLED is een integration die ons toe laat om NeoPixel aan te sturen.
+
+
 #### status monitoring
 
 1. thumfi.be -> met ook de 4 die in de balk staan erbij
