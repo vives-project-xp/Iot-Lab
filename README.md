@@ -32,6 +32,21 @@ Aan de hand van het script kan met mqtt de stroom, spanning geregeld worden. Ten
 
 ### Home assistant
 
+#### installatie
+
+1. download raspberry pi imager op de volgende [website](https://www.raspberrypi.com/software/)
+2. installeer en start de raspberry pi imager
+3. klik op selecteer OS en ga naar Other specific-purpose OS -> Home assistants and home automation -> Home assistant
+4. Selecteer afhankelijk van op welke pi je werkt de home assistant versie
+5. keer terug en kies als opslagapparaat de sd kaart waarop je home assistant wilt zetten
+6. druk op schrijf
+7. steek de SD card in je pi
+8. sluit een ethernet kabel aan op de pi
+9. sluit de power kabel aan
+10. Nu kan je op home assistant via het adres homeassistant.local:8123. Als dit niet werkt kan het zijn dat je een adres van de volgende vorm moet gebruiken "http://X.X.X.X:8123"
+
+Het is ook mogelijk om home assistant in een docker container te draaien volg hiervoor de instructies op de volgende [pagina](https://www.home-assistant.io/installation/raspberrypi/#install-home-assistant-container). Voor ons project is het echter logischer om het op een pi te draaien.
+
 #### status monitoring
 
 1. thumfi.be -> met ook de 4 die in de balk staan erbij
