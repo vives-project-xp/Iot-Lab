@@ -80,7 +80,6 @@ Laat toe om je google calendar te verbinden met home assistant. De integration v
 3. WLED
 WLED is een integration die ons toe laat om NeoPixel aan te sturen.
 
-
 #### Status monitoring
 
 1. thumfi.be -> met ook de 4 die in de balk staan erbij
@@ -122,6 +121,90 @@ dan het juiste apparaat geselecteerd worden en een title en message voor de noti
 Indien je je niet altijd op het netwerk van de home assistant bevindt kan je ook meldingen sturen via e-mail of whatsapp.
 Voor whatsapp kan je de [callmebot](https://www.callmebot.com/blog/whatsapp-text-messages-from-homeassistant/) service gebruiken en voor e-mail de  
 [SMTP service](https://www.home-assistant.io/integrations/smtp/).
+
+#### actionable notifications
+
+Een actionable notification is een notification die één of meerdere actions kan uitvoeren aan de hand van buttons. Dit type notifications werkt enkel met de home assistant app. Voor deze notification moet eerst een script aangemaakt worden met de volgende eigenschappen in yaml.
+
+```yaml
+alias: Actionable notification (turn on device ??)
+sequence:
+  - service: notify.mobile_app_sm_a528b
+    data:
+      message: Do you want to turn on or off the device
+      title: DEVICE
+      data:
+        actions:
+          - action: TURN_ON_DEVICE
+            title: Turn on the device
+          - action: TURN_OFF_DEVICE
+            title: Turn off device
+mode: single
+```
+
+Wannneer dit script aangeroepen worden zal het een notification sturen naar de home assistant app van het gespecifieerde device. In het data element geven we de verschillende actions mee die kunnen uitgevoerd worden, hier een device aan of uit zetten.
+
+Vervolgens hebben we twee automations nodig. Eén automatie die ervoor zorgt dat het script runt wanneer een trigger gebeurt, in ons voorbeeld is dit de press van een button. Hiernaast hebben we nog een automation nodig die kijkt welke action gekozen werd in de notification en aan de hand hiervan een action uitvoert.
+
+```yaml
+alias: Actionable bouwlamp 2_test
+description: ""
+trigger:
+  - platform: device
+    device_id: 694d768c2536b86d13ea2abe505c6313
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: "001"
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 001
+condition: []
+action:
+  - service: script.actionable_notification_turn_on_device
+    data: {}
+mode: single
+```
+
+De yaml code voor deze eerste automation is vrij simpel. In de trigger bevind zich de click van de button, deze is bij ons ietwat speciaal door de button waarmee we werken. Vervolgens wordt als action het voordien gemaakte script aangeropen.
+
+```yaml
+alias: actions from actionable notification
+description: ""
+trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: TURN_ON_DEVICE
+    id: turn_on_device
+  - platform: event
+    event_type: mobile_app_notification_action
+    id: turn_off_device
+    event_data:
+      action: TURN_OFF_DEVICE
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: turn_on_device
+        sequence:
+          - type: turn_on
+            device_id: db6d7e69c52288cebd3673f3a21be0cf
+            entity_id: switch.bouwlamp2_plug_3
+            domain: switch
+      - conditions:
+          - condition: trigger
+            id: turn_off_device
+        sequence:
+          - type: turn_off
+            device_id: db6d7e69c52288cebd3673f3a21be0cf
+            entity_id: switch.bouwlamp2_plug_3
+            domain: switch
+mode: single
+```
+
+De tweede automation is iets moeilijker. Ten eerste wordt als trigger gekeken of er een event binnenkomt van uit een notification. Dit kan in ons geval dus TURN_ON_DEVICE of TURN_OFF_DEVICE zijn. Om in het action gedeelte verschillende zaken uit te voeren gebruiken we een trigger id. Dit id wordt in het trigger gedeelte van de code gespecifieerd voor elk mogelijk event. Omdat we dit id hebben kunnen we dan in het action gedeelte choose gebruiken. Hier kiezen we dan aan de hand van het id van de trigger welke action uitgevoerd moet worden. In ons voorbeeld is dit dus het aan of uitzetten van een device/plug.
 
 #### Toevoegen van sensoren, switches, ... aan home assistant
 
