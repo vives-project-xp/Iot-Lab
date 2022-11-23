@@ -23,16 +23,22 @@ Voor de status monitoring van sites zullen we gebruik maken van de ping service 
 
 ## Documentatie
 
-### powersupply script
+### Powersupply script
 
 Een script om aan de hand van mqtt de waarden van een voeding aan te passen. Dit gebeurt met USB aan de hand van SCPI commands.
 Aan de hand van het script kan met mqtt de stroom, spanning geregeld worden. Ten laatste kan een sinus gebruikt worden om de stroom te bepalen, op deze manier wordt een dag en nacht cyclus gesimuleerd.
 
-[powersupply repo documentatie](https://github.com/vives-project-xp/Iot-lab_powersupply_script)
+[Powersupply repo documentatie](https://github.com/vives-project-xp/Iot-lab_powersupply_script)
+
+### Configuratie Smart Devices
+
+Hieronder is de link naar meer info over de toestellen die we gebruiken in ons project.
+
+[Configuratie Smart-devices](config_smart_devices.md)
 
 ### Home assistant
 
-#### installatie
+#### Installatie
 
 1. download raspberry pi imager op de volgende [website](https://www.raspberrypi.com/software/)
 2. installeer en start de raspberry pi imager
@@ -47,7 +53,7 @@ Aan de hand van het script kan met mqtt de stroom, spanning geregeld worden. Ten
 
 Het is ook mogelijk om home assistant in een docker container te draaien volg hiervoor de instructies op de volgende [pagina](https://www.home-assistant.io/installation/raspberrypi/#install-home-assistant-container). Voor ons project is het echter logischer om het op een pi te draaien.
 
-#### gebruikte add-ons
+#### Gebruikte add-ons
 
 1. File editor
 Aan de hand deze add-on kunnen de files van de home assistant aangepast worden. Dit is zeer handig voor het toevoegen van sensoren, services,... aan configuration.yaml en ook om ongebruikte automations aan te passen aan de hand van yaml, deze kunnen namelijk binnen home assistant enkel gevonden worden als ze al getriggered zijn.
@@ -65,7 +71,7 @@ Aan de hand van tailscale kan een VPN opgezet worden naar de home assistant pi. 
 7. Terminal & SSH
 Laat ons toe om de home assistant te besturen aan de hand van de terminal
 
-#### home assistant integrations
+#### Home assistant integrations
 
 1. google assistant
 De google assistant laat toe om zaken aan te sturen aan de hand van google assistant vanop de gsm, tablet of google home.
@@ -75,7 +81,7 @@ Laat toe om je google calendar te verbinden met home assistant. De integration v
 WLED is een integration die ons toe laat om NeoPixel aan te sturen.
 
 
-#### status monitoring
+#### Status monitoring
 
 1. thumfi.be -> met ook de 4 die in de balk staan erbij
 2. app.thumfi.be
@@ -117,9 +123,9 @@ Indien je je niet altijd op het netwerk van de home assistant bevindt kan je ook
 Voor whatsapp kan je de [callmebot](https://www.callmebot.com/blog/whatsapp-text-messages-from-homeassistant/) service gebruiken en voor e-mail de  
 [SMTP service](https://www.home-assistant.io/integrations/smtp/).
 
-#### toevoegen van sensoren, switches, ... aan home assistant
+#### Toevoegen van sensoren, switches, ... aan home assistant
 
-#### mqtt
+#### MQTT
 
 1. mqtt broker binnen home assistant
 
@@ -305,20 +311,20 @@ cards:
 
 ![example grid card](/img/grid_mushroom.png)
 
-#### layout-card
+#### Layout-card
 
 Layout-card bied 3 nieuwe view types aan voor ons dashboard: Horizontal, Vertical en Grid. Wij hebben hiervan gebruik gemaakt van grid. Hieronder het verschil tussen de default view type en grid view type van layout-card.
 
 ![grid view](/img/grid_mushroom.png)
 ![default view](/img/default_layout.png)
 
-#### apexcharts-card
+#### Apexcharts-card
 
 Apexcharts staat ons toe om mooiere grafieken toe te voegen aan ons dashboard. Persoonlijk hebben wij het gebruikt om een grafiek van de stroom van onze voeding te tonen.
 
 ![apexcharts grafiek](/img/clean_graph.png)
 
-#### themes
+#### Themes
 
 Voor onze dashboards hebben we gebruik gemaakt van ... voor onze themes. Deze themes hebben allemaal zowel een light als dark versie.
 
