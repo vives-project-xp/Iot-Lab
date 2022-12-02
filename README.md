@@ -36,6 +36,12 @@ Hieronder is de link naar meer info over de toestellen die we gebruiken in ons p
 
 [Configuratie Smart-devices](config_smart_devices.md)
 
+### Automaties
+
+Hieronder de link voor een gedetaileerde uitleg over alle gebruikte automaties.
+
+[Automaties](automations.md)
+
 ### Home assistant
 
 #### Installatie
