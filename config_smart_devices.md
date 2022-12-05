@@ -118,4 +118,13 @@ De configuratie van deze lampen, moet je gaan gebruik maken van het **Tuya IoT P
 
 Daarna kan je de rest van de instructies gaan volgen via [deze link](https://www.home-assistant.io/integrations/tuya/). Deze link is om [een account creëren/inloggen](https://auth.tuya.com/?from=http%3A%2F%2Fiot.tuya.com%2Fcloud%2Fbasic%3Fid%3Dp1668689825809xxqusn%26region%3DEU%26toptab%3Dapplication%26authorizeTab%3D0) en de [app](https://developer.tuya.com/en/docs/iot/tuya-smart-app-smart-life-app-advantages?id=K989rqa49rluq#title-1-Download).
 
+## IP Camera
+
+De camera wordt eerst aangesloten aan de router en voeding. We open de eWeLink app. We maken een login account en klikken op add devices. Eenmaal de devices zijn toegevoegd kunnnen we deze integreren in Home assistant.
+
+In home assistant  kunnen we kiezen voor de eWinLink  addon of voor general camera. Bij deze kiezen we voor general camera. Hiervoor hebben we een RSTP addres nodig. Deze kunnen we vinden bij camera instellingen en rtsp. Dit RSTP url plaatsen we in de bar Stream Source.
+<!-- ![camera](./img/Generic_camera.png) -->
+<img src="./img/Generic_camera.png" alt="drawing" style="width:200px;"/>
+
+De rest van de settings is zelf te kiezen.
 
