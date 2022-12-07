@@ -118,6 +118,20 @@ De configuratie van deze lampen, moet je gaan gebruik maken van het **Tuya IoT P
 
 Daarna kan je de rest van de instructies gaan volgen via [deze link](https://www.home-assistant.io/integrations/tuya/). Deze link is om [een account creëren/inloggen](https://auth.tuya.com/?from=http%3A%2F%2Fiot.tuya.com%2Fcloud%2Fbasic%3Fid%3Dp1668689825809xxqusn%26region%3DEU%26toptab%3Dapplication%26authorizeTab%3D0) en de [app](https://developer.tuya.com/en/docs/iot/tuya-smart-app-smart-life-app-advantages?id=K989rqa49rluq#title-1-Download).
 
+### Local Tuya
+
+De lampen nu zijn nog anders geconnecteerd. Hierbij worden nu de lokale keys gebruikt om met de lampen te connecteren. Hier vind je [extra informatie](https://github.com/rospogrigio/localtuya).
+
+Om de lokale keys van de lampen te verkrijgen moet je het volgende doen:
+
+1. Op de tuya iot platform gaan en daar gaan naar API calls, en zoeken naar "Smart Home Device Management" of device management. Daarin zal je een GET-request kunnen doen van **device information**.
+
+2. In die call zal je dan de device ID moeten ingeven. Deze zijn ook terug te vinden op het iot platform zelf.
+
+3. Hierbij zal je de lokale key verkrijgen die je zult nodig hebben om de lampen te gaan verbinden.
+
+Bij het toevoegen van deze lampen, zal je verschillende opties moeten invullen en dit is niet gelijk wat je invult, dus [kijk hier wat je moet invullen/aanpassen.](https://community.home-assistant.io/t/tuya-bulb-wont-go-rgb-after-being-set-to-white/373436/2)
+
 ## IP Camera
 
 De camera wordt eerst aangesloten aan de router en voeding. We open de eWeLink app. We maken een login account en klikken op add devices. Eenmaal de devices zijn toegevoegd kunnnen we deze integreren in Home assistant.

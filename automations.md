@@ -1,8 +1,9 @@
 # Onze gebruikte automaties
 
-## security
+## Security
 
-1. snapshot nemen wanneer er niemand in een lokaal hoort te zijn, maar er toch motion is
+1. Snapshot nemen wanneer er niemand in een lokaal hoort te zijn, maar er toch motion is.
+
 Voor deze automatie wordt gebruik gemaakt van google calendar en een motion sensor om een snapshot te sturen via een melding. We doen dit voor security er kan zo niemand zich in de klas bevinden wanneer er geen les is. Een mogelijke uitbreiding hierbij is om ervoor te zorgen dat dit niet gebeurt wanneer ons "alarm" uitgezet is.
 
 ```yaml
@@ -42,8 +43,11 @@ action:
 - condition: In de condition controler of er op dit moment geen les is in het lokaal. We willen namelijk enkel een snapshot nemen en versturen wanneer er geen les hoort te zijn en dus ook geen motion.
 - action: In het action gedeelte voeren we meerdere actions uit. Ten eerste wordt er een foto genomen door de geselecteerde camera en wordt deze opgeslagen. Hierna wachten we enkele seconden, om daarna de genomen foto te versturen in een melding naar de home assistant app.
 
-2. Aan en uitzetten van alarm aan de hand van NFC tag
-Aan de hand van de volgende automaties wordt het alarm aan en uitgezet bij het scannen van een NFC tag. Wanneer deze tag gescanned wordt zal ook een snapshot genomen worden die opgestuurd wordt naar de home assistant app. Ook zet deze automatie een licht rood wanneer het alarm aanstaat en groen wanneer het uitstaat.
+2. Aan en uitzetten van alarm aan de hand van NFC tag.
+
+Aan de hand van de volgende automaties wordt het alarm aan en uitgezet bij het scannen van een NFC tag. Wanneer deze tag gescanned wordt, zal ook een snapshot genomen worden die opgestuurd wordt naar de home assistant app. Deze automatisatie cycled door de helper die is aangemaakt met 2 options.
+
+![helper](./img/helper_color.png)
 
 ```yaml
 alias: Cycle RGB lights
@@ -97,10 +101,28 @@ action:
     entity_id: light.lamp1
 ```
 
+```yaml
+alias: lights green
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - input_select.tag_color_toggle
+    to: green_light
+condition: []
+action:
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.alarm_state
+  - service: script.cycle_rgb_lights
+    data: {}
+```
+
 - trigger: De trigger van deze automatie is wanneer de tag_color_toggle input_select helper verandert naar red_light.
 - actions: Ten eerste zetten we de input_boolean die de state van ons alarm aantoont op on. Hierna wordt een script gerunt die de lamp op rood zet. Het script wordt hieronder uitgelegd
 
-YAH DIT KAN IK NIE UITLEGGEN JARNO PLZ HELP
+Dit script zal ervoor zorgen dat de lamp rood wordt (dashboard lamp 1). Hiervoor wordt er een service opgemaakt die de lamp aansteekt met het bepaald kleur (bv: rood zoals hieronder). Ook wordt er gestuurd via een whatsapp notificatie als het alarm aan of uit is. Vervolgens wordt de google hub aangestuurd en wordt er bijvoorbeeld gezegd: "Alarm is on". Hiervoor wordt er een media player service opgesteld, een delay aan toegevoegd van 4 seconden (zodat de text-to-speech niet blokkeert) en dan de media player uitzetten als laatste.
 
 ```yaml
 alias: light go red
@@ -149,8 +171,6 @@ sequence:
       device_id: 0300c8ca212177a3923003f6cceb9dbd
 mode: single
 ```
-
-- De automation om het licht groen te laten worden gebeurt op dezelfde manier.
 
 3. lichten van kleur veranderen afhankelijk van of het nacht of dag is in de simulatie van een dag
 
@@ -214,7 +234,7 @@ mode: single
 - triggers: In deze automatie maken we gebruik van trigger ID's om een onderscheide te maken tussen verschillende triggers en dan andere actions uit te gaan voeren. We hebben hier twee triggers wanneer de switch van off naar on gaat en het dus dag wordt en wanneer de switch van on naar off gaat en het dus nacht wordt.
 - action: In onze action zetten we eerst de lamp aan om vervolgens een choose action te gebruiken. Hierin kan aan de hand van ons entity ID gekozen worden welke action uitgevoerd moet worden. Wanneer de id night zetten we de lamp op een wit/lichtblauwe kleur en wanneer de ID day is op een oranje kleur.
 
-4. aan en uitzetten van koelkast afhankelijk van state van simulatie dag
+4. Aan en uitzetten van koelkast afhankelijk van state van simulatie dag
 
 ```yaml
 alias: koelkast(on/off)
@@ -257,7 +277,7 @@ mode: single
 - trigger: We hebben voor deze automatie opnieuw twee triggers met elk een trigger ID. Het is hier opnieuw of de switch van de dag simulatie van off naar on gaat en van on naar off.
 - action: In de action wordt afhankelijk van de trigger ID's van de triggers gekozen om de switch van de koelkast aan of uit te zetten.
 
-5. apparaat aanzetten met een actionable notification
+5. Zpparaat aanzetten met een actionable notification
 
 ```yaml
 alias: Actionable bouwlamp 2_test
@@ -281,7 +301,7 @@ mode: single
 ```
 
 - trigger: De trigger van deze automation is de push van een button
-- action: als action wordt een script uitgevoerd die een actionable notification stuurt en wordt als data de naam van het device meegestuurd.
+- action: Als action wordt een script uitgevoerd die een actionable notification stuurt en wordt als data de naam van het device meegestuurd.
 
 ```yaml
 alias: Actionable notification (turn on device ??)
