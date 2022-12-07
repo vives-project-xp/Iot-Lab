@@ -122,7 +122,7 @@ action:
 - trigger: De trigger van deze automatie is wanneer de tag_color_toggle input_select helper verandert naar red_light.
 - actions: Ten eerste zetten we de input_boolean die de state van ons alarm aantoont op on. Hierna wordt een script gerunt die de lamp op rood zet. Het script wordt hieronder uitgelegd
 
-Dit script zal ervoor zorgen dat de lamp rood wordt (dashboard lamp 1). Hiervoor wordt er een service opgemaakt die de lamp aansteekt met het bepaald kleur (bv: rood zoals hieronder). Ook wordt er gestuurd via een whatsapp notificatie als het alarm aan of uit is. Vervolgens wordt de google hub aangestuurd en wordt er bijvoorbeeld gezegd: "Alarm is on". Hiervoor wordt er een media player service opgesteld, een delay aan toegevoegd van 4 seconden (zodat de text-to-speech niet blokkeert) en dan de media player uitzetten als laatste.
+Dit script zal ervoor zorgen dat de lamp rood wordt (dashboard lamp 1). Hiervoor wordt er een service opgemaakt die de lamp aansteekt met het bepaald kleur (bv: rood zoals hieronder). Ook wordt er gestuurd via een whatsapp notificatie als het alarm aan of uit is. Vervolgens wordt de google hub aangestuurd en wordt er bijvoorbeeld gezegd: "Alarm is on". Hiervoor wordt er een media player service opgesteld, een delay aan toegevoegd van 4 seconden (zodat de text-to-speech niet blokkeert) en dan de media player uitzetten als laatste. Hetzelfde bij de "light go green"-script.
 
 ```yaml
 alias: light go red
