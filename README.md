@@ -125,8 +125,7 @@ Selecteer bij From "connected" en bij To "disconnected". Vervolgens klik je op a
 dan het juiste apparaat geselecteerd worden en een title en message voor de notification gekozen worden. Druk ten laatste op save.
 
 Indien je je niet altijd op het netwerk van de home assistant bevindt kan je ook meldingen sturen via e-mail of whatsapp.
-Voor whatsapp kan je de [callmebot](https://www.callmebot.com/blog/whatsapp-text-messages-from-homeassistant/) service gebruiken en voor e-mail de  
-[SMTP service](https://www.home-assistant.io/integrations/smtp/).
+Voor whatsapp kan je de [callmebot](https://www.callmebot.com/blog/whatsapp-text-messages-from-homeassistant/) service gebruiken en voor e-mail de [SMTP service](https://www.home-assistant.io/integrations/smtp/).
 
 #### actionable notifications
 
