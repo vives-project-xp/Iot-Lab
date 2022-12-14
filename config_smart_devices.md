@@ -144,7 +144,10 @@ De rest van de settings is zelf te kiezen.
 
 ## Google Nest Hub
 
-De Google Nest Hub wordt gebruikt om op die manier om Home Assistant erop af te spelen.  Dit doen we door middel van scripts en casting.  Als de Home Assistant opnieuw wordt opgestart zal die dan automatisch door verwijzen naar de juiste pagina.  Ook als de deur opengaat zal die een verwelkomingsbericht sturen.
-<img src="./img/googleNestHub.png" alt="drawing" style="width:200px;">
+De Google Nest Hub wordt gebruikt om op die manier om Home Assistant erop af te spelen.  Dit doen we door middel van scripts en casting.  Als de Home Assistant opnieuw wordt opgestart zal die dan automatisch door verwijzen naar de juiste pagina.  Ook als de deur opengaat zal die een verwelkomingsbericht afspelen.
 
+<img src="./img/googleNestHub.png" alt="drawing" style="width:180px;">
 
+## Amazon Echo Schow 8
+
+Hierbij lukt het niet om connectie te maken met de Home Assistant.  Wel kunnen we de website erop hosten via de browser genaamd 'Silk'.
