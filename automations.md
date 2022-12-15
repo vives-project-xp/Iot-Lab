@@ -1,8 +1,9 @@
 # Onze gebruikte automaties
 
-## security
+## Security
 
-1. snapshot nemen wanneer er niemand in een lokaal hoort te zijn, maar er toch motion is
+1. Snapshot nemen wanneer er niemand in een lokaal hoort te zijn, maar er toch motion is.
+
 Voor deze automatie wordt gebruik gemaakt van google calendar en een motion sensor om een snapshot te sturen via een melding. We doen dit voor security er kan zo niemand zich in de klas bevinden wanneer er geen les is. Een mogelijke uitbreiding hierbij is om ervoor te zorgen dat dit niet gebeurt wanneer ons "alarm" uitgezet is.
 
 ```yaml
@@ -42,8 +43,11 @@ action:
 - condition: In de condition controler of er op dit moment geen les is in het lokaal. We willen namelijk enkel een snapshot nemen en versturen wanneer er geen les hoort te zijn en dus ook geen motion.
 - action: In het action gedeelte voeren we meerdere actions uit. Ten eerste wordt er een foto genomen door de geselecteerde camera en wordt deze opgeslagen. Hierna wachten we enkele seconden, om daarna de genomen foto te versturen in een melding naar de home assistant app.
 
-2. Aan en uitzetten van alarm aan de hand van NFC tag
-Aan de hand van de volgende automaties wordt het alarm aan en uitgezet bij het scannen van een NFC tag. Wanneer deze tag gescanned wordt zal ook een snapshot genomen worden die opgestuurd wordt naar de home assistant app. Ook zet deze automatie een licht rood wanneer het alarm aanstaat en groen wanneer het uitstaat.
+2. Aan en uitzetten van alarm aan de hand van NFC tag.
+
+Aan de hand van de volgende automaties wordt het alarm aan en uitgezet bij het scannen van een NFC tag. Wanneer deze tag gescanned wordt, zal ook een snapshot genomen worden die opgestuurd wordt naar de home assistant app. Deze automatisatie cycled door de helper die is aangemaakt met 2 options.
+
+![helper](./img/helper_color.png)
 
 ```yaml
 alias: Cycle RGB lights
@@ -97,10 +101,28 @@ action:
     entity_id: light.lamp1
 ```
 
+```yaml
+alias: lights green
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - input_select.tag_color_toggle
+    to: green_light
+condition: []
+action:
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.alarm_state
+  - service: script.cycle_rgb_lights
+    data: {}
+```
+
 - trigger: De trigger van deze automatie is wanneer de tag_color_toggle input_select helper verandert naar red_light.
 - actions: Ten eerste zetten we de input_boolean die de state van ons alarm aantoont op on. Hierna wordt een script gerunt die de lamp op rood zet. Het script wordt hieronder uitgelegd
 
-YAH DIT KAN IK NIE UITLEGGEN JARNO PLZ HELP
+Dit script zal ervoor zorgen dat de lamp rood wordt (dashboard lamp 1). Hiervoor wordt er een service opgemaakt die de lamp aansteekt met het bepaald kleur (bv: rood zoals hieronder). Ook wordt er gestuurd via een whatsapp notificatie als het alarm aan of uit is. Vervolgens wordt de google hub aangestuurd en wordt er bijvoorbeeld gezegd: "Alarm is on". Hiervoor wordt er een media player service opgesteld, een delay aan toegevoegd van 4 seconden (zodat de text-to-speech niet blokkeert) en dan de media player uitzetten als laatste. Hetzelfde bij de "light go green"-script.
 
 ```yaml
 alias: light go red
@@ -150,9 +172,218 @@ sequence:
 mode: single
 ```
 
-- De automation om het licht groen te laten worden gebeurt op dezelfde manier.
+### Alarm creation
 
-3. lichten van kleur veranderen afhankelijk van of het nacht of dag is in de simulatie van een dag
+Dit script is voor als het alarm aan is en de deur gaat open. (Alarm_Automation_on)
+
+-Triggers: Deze automation zal getriggered worden als de deur opengaat en als condition de **Alarm_state** aanstaat.
+
+-Actions: Er lopen 3 acions in parallel => het volume wordt aangezet, dan speelt er een geluid voor 10 seconden.
+
+Daarna komt het in een options:
+
+1. Als het alarm nog steeds aanstaat, dan zal het alarm afgaan totdat de alarm state wordt uitgezet. En ook een notificatie.
+
+2. Als het alarm uit is door de NFC-tag, dan zal er een notificatie komen die zal zeggen "Alarm is off".
+
+```yaml
+alias: Alarm_Automation_on
+description: Als de deur open gaat en alarm staat aan
+trigger:
+  - type: opened
+    platform: device
+    device_id: dd68653e7801c9978c9305e192d66903
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+    domain: binary_sensor
+condition:
+  - condition: state
+    entity_id: input_boolean.alarm_state
+    state: "on"
+action:
+  - parallel:
+      - service: media_player.volume_set
+        data:
+          volume_level: 0.6
+        target:
+          device_id: 0300c8ca212177a3923003f6cceb9dbd
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.nesthub0c4d
+        data:
+          media_content_id: >-
+            media-source://media_source/local/Never Gonna Give You Up
+            Original.mp3
+          media_content_type: audio/mpeg
+        metadata:
+          title: Never Gonna Give You Up Original.mp3
+          thumbnail: null
+          media_class: music
+          children_media_class: null
+          navigateIds:
+            - {}
+            - media_content_type: app
+              media_content_id: media-source://media_source
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 10
+          milliseconds: 0
+  - choose:
+      - conditions:
+          - condition: state
+            entity_id: input_boolean.alarm_state
+            state: "on"
+        sequence:
+          - repeat:
+              until:
+                - condition: state
+                  entity_id: input_boolean.alarm_state
+                  state: "off"
+              sequence:
+                - service: notify.whatsapp_message_phone1
+                  data:
+                    message: SOMEONE ENTERED WITHOUT SCANNING
+                    title: THE ALARM IS GOING OFF
+                - service: media_player.volume_set
+                  data:
+                    volume_level: 0.5
+                  target:
+                    device_id: 0300c8ca212177a3923003f6cceb9dbd
+                - service: media_player.play_media
+                  target:
+                    entity_id: media_player.nesthub0c4d
+                  data:
+                    media_content_id: >-
+                      media-source://media_source/local/salamisound-1344064-siren-howling-even-from-very.mp3
+                    media_content_type: audio/mpeg
+                  metadata:
+                    title: salamisound-1344064-siren-howling-even-from-very.mp3
+                    thumbnail: null
+                    media_class: music
+                    children_media_class: null
+                    navigateIds:
+                      - {}
+                      - media_content_type: app
+                        media_content_id: media-source://media_source
+                - delay:
+                    hours: 0
+                    minutes: 0
+                    seconds: 7
+                    milliseconds: 0
+      - conditions:
+          - condition: state
+            entity_id: input_boolean.alarm_state
+            state: "off"
+        sequence:
+          - service: notify.whatsapp_message_phone1
+            data:
+              message: alarm disarmed
+              title: Thanks for disarming the alarm
+mode: single
+```
+
+Het volgende script dient ervoor als het alarm terug wordt aangezet.
+
+-Triggers: Als het alarm veranderd van state (off=>on) en als de deur open is.
+
+-Actions: Er wordt een tijd gegeven van 10 seconden en dan komt het in options terecht.
+
+1. Als de deur nog open is, zal het een melding sturen dat de deur nog openstaat en zal de google hub steeds afspelen dat je de deur moet sluiten.
+
+2. Als de deur gesloten is, zal je een bericht krijgen dat de deur dicht is en zal de media van de google hub niet meer afspelen.
+
+```yaml
+alias: Alarm_On_When_Door_Open
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - input_boolean.alarm_state
+    from: "off"
+    to: "on"
+condition:
+  - type: is_open
+    condition: device
+    device_id: dd68653e7801c9978c9305e192d66903
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+    domain: binary_sensor
+action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - choose:
+      - conditions:
+          - type: is_open
+            condition: device
+            device_id: dd68653e7801c9978c9305e192d66903
+            entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+            domain: binary_sensor
+        sequence:
+          - service: notify.whatsapp_message_phone1
+            data:
+              title: DOOR IS STILL OPEN, PLEASE CLOSE IT
+              message: "Shut the door or the alarm won't work properly "
+          - repeat:
+              until:
+                - type: is_not_open
+                  condition: device
+                  device_id: dd68653e7801c9978c9305e192d66903
+                  entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+                  domain: binary_sensor
+              sequence:
+                - service: media_player.volume_set
+                  data:
+                    volume_level: 0.6
+                  target:
+                    device_id: 0300c8ca212177a3923003f6cceb9dbd
+                - service: media_player.play_media
+                  target:
+                    entity_id: media_player.nesthub0c4d
+                  data:
+                    media_content_id: >-
+                      media-source://tts/google_translate?message=Please+shut+the+door+or+i+will+do+selfdestruct.
+                    media_content_type: provider
+                  metadata:
+                    title: Please shut the door or i will do selfdestruct.
+                    thumbnail: >-
+                      https://brands.home-assistant.io/_/google_translate/logo.png
+                    media_class: app
+                    children_media_class: null
+                    navigateIds:
+                      - {}
+                      - media_content_type: app
+                        media_content_id: media-source://tts
+                      - media_content_type: provider
+                        media_content_id: >-
+                          media-source://tts/google_translate?message=Please+shut+the+door+or+i+will+do+selfdestruct.
+                - delay:
+                    hours: 0
+                    minutes: 0
+                    seconds: 5
+                    milliseconds: 0
+      - conditions:
+          - type: is_not_open
+            condition: device
+            device_id: dd68653e7801c9978c9305e192d66903
+            entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+            domain: binary_sensor
+        sequence:
+          - service: notify.whatsapp_message_phone1
+            data:
+              message: Thanks for closing the door
+              title: Door closed
+          - service: media_player.media_stop
+            data: {}
+            target:
+              device_id: 0300c8ca212177a3923003f6cceb9dbd
+mode: single
+```
+
+## DVDW automations
+
+1. lichten van kleur veranderen afhankelijk van of het nacht of dag is in de simulatie van een dag
 
 ```yaml
 alias: Night/Day toggle
@@ -214,7 +445,7 @@ mode: single
 - triggers: In deze automatie maken we gebruik van trigger ID's om een onderscheide te maken tussen verschillende triggers en dan andere actions uit te gaan voeren. We hebben hier twee triggers wanneer de switch van off naar on gaat en het dus dag wordt en wanneer de switch van on naar off gaat en het dus nacht wordt.
 - action: In onze action zetten we eerst de lamp aan om vervolgens een choose action te gebruiken. Hierin kan aan de hand van ons entity ID gekozen worden welke action uitgevoerd moet worden. Wanneer de id night zetten we de lamp op een wit/lichtblauwe kleur en wanneer de ID day is op een oranje kleur.
 
-4. aan en uitzetten van koelkast afhankelijk van state van simulatie dag
+2. Aan en uitzetten van koelkast afhankelijk van state van simulatie dag
 
 ```yaml
 alias: koelkast(on/off)
@@ -257,7 +488,7 @@ mode: single
 - trigger: We hebben voor deze automatie opnieuw twee triggers met elk een trigger ID. Het is hier opnieuw of de switch van de dag simulatie van off naar on gaat en van on naar off.
 - action: In de action wordt afhankelijk van de trigger ID's van de triggers gekozen om de switch van de koelkast aan of uit te zetten.
 
-5. apparaat aanzetten met een actionable notification
+3. Apparaat aanzetten met een actionable notification
 
 ```yaml
 alias: Actionable bouwlamp 2_test
@@ -281,7 +512,7 @@ mode: single
 ```
 
 - trigger: De trigger van deze automation is de push van een button
-- action: als action wordt een script uitgevoerd die een actionable notification stuurt en wordt als data de naam van het device meegestuurd.
+- action: Als action wordt een script uitgevoerd die een actionable notification stuurt en wordt als data de naam van het device meegestuurd.
 
 ```yaml
 alias: Actionable notification (turn on device ??)
