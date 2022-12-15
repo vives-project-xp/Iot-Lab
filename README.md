@@ -128,6 +128,53 @@ Indien je je niet altijd op het netwerk van de home assistant bevindt kan je ook
 Voor whatsapp kan je de [callmebot](https://www.callmebot.com/blog/whatsapp-text-messages-from-homeassistant/) service gebruiken en voor e-mail de  
 [SMTP service](https://www.home-assistant.io/integrations/smtp/).
 
+#### post command in home assistant
+
+Een post command kan binnen home assistaant op een aantal verschillende manieren gedaan worden. Er kan gebruik gemaakt worden van shell commands en/of bash scripts met curl. Daarnaast kan er ook gebruik gemaakt worden van rest_command binnen home asisstant.
+
+```yaml
+rest_command:
+  post_spongebob:
+    url: "http://172.16.99.3:3000"
+    method: POST
+    content_type: 'image/png'
+    payload: {your base 64 string}
+  post_black:
+    url: "http://172.16.99.3:3000"
+    method: POST
+    content_type: 'image/png'
+    payload: {your base 64 string}
+    
+shell_command:
+  post_spongebob: bash /config/bash_scripts/curlPost.sh "spongebob"
+  post_black: bash /config/bash_scripts/curlPost.sh "black"
+  touch: bash /config/bash_scripts/touch.sh
+```
+
+```sh
+#!/bin/bash
+
+echo $1
+
+if [[ "$1" == "spongebob" ]];
+then
+    echo "spongebob"
+    curl --request POST \
+      --url http://172.16.99.3:3000/ \
+      --header 'Authorization: Bearer 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' \
+      --header 'Content-Type: image/png' \
+      --data {base 64 string}
+else
+    echo "black image"
+    curl --request POST \
+      --url http://172.16.99.3:3000/ \
+      --header 'Authorization: Bearer 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' \
+      --header 'Content-Type: image/png' \
+      --data {base 64 string}
+fi  
+
+```
+
 #### actionable notifications
 
 Een actionable notification is een notification die één of meerdere actions kan uitvoeren aan de hand van buttons. Dit type notifications werkt enkel met de home assistant app. Voor deze notification moet eerst een script aangemaakt worden met de volgende eigenschappen in yaml.
