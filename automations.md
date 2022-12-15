@@ -1,5 +1,39 @@
 # Onze gebruikte automaties
 
+## POST command automation
+
+1. 's Ochtends moet een foto op het scherm geplaatst worden, dit gebeurd met een post command. 's Avonds moet er een zwarte foto op het scherm geplaatst worden.
+
+```yaml
+alias: POST to screen
+description: ""
+trigger:
+  - platform: time
+    at: "08:15:00"
+    id: morning
+  - platform: time
+    at: "19:15:00"
+    id: evening
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: morning
+        sequence:
+          - service: rest_command.post_spongebob
+            data: {}
+      - conditions:
+          - condition: trigger
+            id: evening
+        sequence:
+          - service: rest_command.post_black
+            data: {}
+mode: single
+```
+
+In deze automation zijn de triggers twee tijdstippen. Als het kwart na acht is wordt de post spongebob rest command uitgevoerd en als het avond is wordt de post black command uitgevoerd.
+
 ## Security
 
 1. Snapshot nemen wanneer er niemand in een lokaal hoort te zijn, maar er toch motion is.
