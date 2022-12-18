@@ -39,53 +39,53 @@ Het is ook mogelijk om home assistant in een docker container te draaien volg hi
 ### Gebruikte add-ons
 
 1. File editor
-Aan de hand deze add-on kunnen de files van de home assistant aangepast worden. Dit is zeer handig voor het toevoegen van sensoren, services,... aan configuration.yaml en ook om ongebruikte automations aan te passen aan de hand van yaml, deze kunnen namelijk binnen home assistant enkel gevonden worden als ze al getriggered zijn.
+   Aan de hand deze add-on kunnen de files van de home assistant aangepast worden. Dit is zeer handig voor het toevoegen van sensoren, services,... aan configuration.yaml en ook om ongebruikte automations aan te passen aan de hand van yaml, deze kunnen namelijk binnen home assistant enkel gevonden worden als ze al getriggered zijn.
 2. Grafana en influxDB
-influxDB staat ons toe om een database te gebruiken binnen home assistant die de verschillende waarden die de CDEM opstuurt van de digitale meter op te slaan.
-Aan de hand van Grafana kunnen we dan op een dashboard de huidige consumptie, huidige productie en grafieken van deze waarden tonen.
+   influxDB staat ons toe om een database te gebruiken binnen home assistant die de verschillende waarden die de CDEM opstuurt van de digitale meter op te slaan.
+   Aan de hand van Grafana kunnen we dan op een dashboard de huidige consumptie, huidige productie en grafieken van deze waarden tonen.
 3. mosquitto broker
-Laat ons toe om een mosquitto broker op de home assistant te laten lopen
+   Laat ons toe om een mosquitto broker op de home assistant te laten lopen
 4. Node-RED
-Laat ons toe om Node-RED te gebruiken op de home assistant. Dit wordt primair gebruikt om de data die binnenkomt van de cdem op de broker in de database te plaatsen. Het kan echter ook gebruikt worden voor automaties, die binnen home assistant moeilijk te maken zijn.
+   Laat ons toe om Node-RED te gebruiken op de home assistant. Dit wordt primair gebruikt om de data die binnenkomt van de cdem op de broker in de database te plaatsen. Het kan echter ook gebruikt worden voor automaties, die binnen home assistant moeilijk te maken zijn.
 5. Z-Wave JS
-Laat home assistant toe om aan de hand van een USB-controller met Z-Wave toestellen te communiceren.
+   Laat home assistant toe om aan de hand van een USB-controller met Z-Wave toestellen te communiceren.
 6. Tailscale
-Aan de hand van tailscale kan een VPN opgezet worden naar de home assistant pi. Dit hebben wij gebruikt om aan het project te kunnen werken van op afstand.
+   Aan de hand van tailscale kan een VPN opgezet worden naar de home assistant pi. Dit hebben wij gebruikt om aan het project te kunnen werken van op afstand.
 7. Terminal & SSH
-Laat ons toe om de home assistant te besturen aan de hand van de terminal
+   Laat ons toe om de home assistant te besturen aan de hand van de terminal
 
 ### Home assistant integrations
 
 1. google assistant
-De google assistant laat toe om zaken aan te sturen aan de hand van google assistant vanop de gsm, tablet of google home.
+   De google assistant laat toe om zaken aan te sturen aan de hand van google assistant vanop de gsm, tablet of google home.
 2. google calendar
-Laat toe om je google calendar te verbinden met home assistant. De integration voegt de calendar dashboard en calendar entities toe. Aan de hand van deze calendar entities kunne automaties aangemaakt worden.
+   Laat toe om je google calendar te verbinden met home assistant. De integration voegt de calendar dashboard en calendar entities toe. Aan de hand van deze calendar entities kunne automaties aangemaakt worden.
 3. WLED
-WLED is een integration die ons toe laat om NeoPixel aan te sturen.
+   WLED is een integration die ons toe laat om NeoPixel aan te sturen.
 
 ## Dashboards
 
-| | | |
-|:-------------------------:|:-------------------------:|:-------------------------:|
-| ![overview](./img/overview.png) |  ![DVDW](./img/DVDW_dashboard.png) | ![IOT_LAB](./img/IOT_LAB_Dashboard.png) |![DVDW&IOT_LAB](./img/DVDW%26IOT_LAB_dashboard.png) |
-| ![grafana](./img/grafana.png) |
+|                                               |                                                 |                                         |
+| :-------------------------------------------: | :---------------------------------------------: | :-------------------------------------: | --------------------------------------------------- |
+| ![overview](./Documentation/img/overview.png) | ![DVDW](./Documentation/img/DVDW_dashboard.png) | ![IOT_LAB](./img/IOT_LAB_Dashboard.png) | ![DVDW&IOT_LAB](./img/DVDW%26IOT_LAB_dashboard.png) |
+|  ![grafana](./Documentation/img/grafana.png)  |
 
 ## Meer uitleg
 
 ### Setup van de pi
 
 Hier vind je hoe de setup van de pi waarop alles staat moet gebeuren.
-[setup](./setup.md)
+[setup](./Documentation/setup.md)
 
 ### Configuratie files gebruiken
 
 Hier vind je hoe je onze configuratie files moet toevoegen aan je eigen home assistant os.
-[configuratie files](./configuratie.md)
+[configuratie files](./Documentation/configuratie.md)
 
 ### Dag van de wetenschap
 
 Hier vind je meer uitleg over alles voor de dag van de wetenschap
-[DVDW](Dag_Van_De_Wetenschap.md)
+[DVDW](./Documentation/Dag_Van_De_Wetenschap.md)
 
 ### Powersuply script
 
@@ -98,16 +98,16 @@ Aan de hand van het script kan met mqtt de stroom, spanning geregeld worden. Ten
 
 Hier vind je meer info over de toestellen die we gebruiken in ons project.
 
-[Configuratie Smart-devices](config_smart_devices.md)
+[Configuratie Smart-devices](./Documentation/config_smart_devices.md)
 
 ### Uitleg home assistant
 
 Hier vind je meer uitleg over de zaken die we binnen home assistant gebruikt hebben. Hier vind je bijvoorbeeld hoe we de verschillende dashboards gemaakt hebben.
 
-[home assistant](hass.md)
+[home assistant](./Documentation/hass.md)
 
 ### Automaties
 
 Hier vind je een gedetaileerde uitleg over alle gebruikte automaties.
 
-[Automaties](automations.md)
+[Automaties](./Documentation/automations.md)
