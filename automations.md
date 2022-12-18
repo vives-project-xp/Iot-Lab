@@ -617,3 +617,27 @@ mode: single
 
 - trigger: De triggers van deze automatie gebeuren wanneer een mobile_app_notification_action ontvangen wordt. Deze triggers hebben een trigger ID om bij action een geschikte action te kunnen kiezen.
 - action: Als actions wordt afhankelijk van het trigger ID een switch aan of uit gezet.
+
+
+4. De boiler uitzetten wanneer de oven aangezet wordt
+
+```yaml
+alias: Oven_Boiler_Off
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - binary_sensor.oven
+    from: "off"
+    to: "on"
+condition: []
+action:
+  - type: turn_off
+    device_id: db6d7e69c52288cebd3673f3a21be0cf
+    entity_id: switch.bouwlamp2_plug_3
+    domain: switch
+mode: single
+```
+
+- trigger: De oven wordt aangezet
+- action: De boiler wordt uitgezet
