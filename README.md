@@ -65,10 +65,11 @@ Het is ook mogelijk om home assistant in een docker container te draaien volg hi
 
 ## Dashboards
 
-|                                               |                                                 |                                                       |
-| :-------------------------------------------: | :---------------------------------------------: | :---------------------------------------------------: | ----------------------------------------------------------------- |
-| ![overview](./Documentation/img/overview.png) | ![DVDW](./Documentation/img/DVDW_dashboard.png) | ![IOT_LAB](./Documentation/img/IOT_LAB_Dashboard.png) | ![DVDW&IOT_LAB](./Documentation/img/DVDW%26IOT_LAB_dashboard.png) |
-|  ![grafana](./Documentation/img/grafana.png)  |                                                 |                                                       |                                                                   |
+|                                               |                                                 |
+| :-------------------------------------------: | :---------------------------------------------: |
+| ![overview](./Documentation/img/overview.png) | ![DVDW](./Documentation/img/DVDW_dashboard.png) |
+![IOT_LAB](./Documentation/img/IOT_LAB_Dashboard.png) | ![DVDW&IOT_LAB](./Documentation/img/DVDW%26IOT_LAB_dashboard.png) |
+|  ![grafana](./Documentation/img/grafana.png)  |
 
 ## Meer uitleg
 
