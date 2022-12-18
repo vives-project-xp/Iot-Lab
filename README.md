@@ -19,7 +19,6 @@ Dit project is gerealiseerd op home assistant. Deze home assitant krijgt alle da
 - [<img src="https://github.com/Smiley078.png" width="25"> Maxim Govaert ](https://github.com/Smiley078)
 - [<img src="https://github.com/jonckheereke.png" width="25"> Robin Jonckheere](https://github.com/jonckheereke)
 
-
 ## Installatie
 
 ### Home assistant os
@@ -64,23 +63,31 @@ Laat toe om je google calendar te verbinden met home assistant. De integration v
 3. WLED
 WLED is een integration die ons toe laat om NeoPixel aan te sturen.
 
-## setup
-
-## dashboards
+## Dashboards
 
 | | | |
 |:-------------------------:|:-------------------------:|:-------------------------:|
 | ![overview](./img/overview.png) |  ![DVDW](./img/DVDW_dashboard.png) | ![IOT_LAB](./img/IOT_LAB_Dashboard.png) |![DVDW&IOT_LAB](./img/DVDW%26IOT_LAB_dashboard.png) |
 | ![grafana](./img/grafana.png) |
 
-## meer uitleg
+## Meer uitleg
 
-### dag van de wetenschap
+### Setup van de pi
+
+Hier vind je hoe de setup van de pi waarop alles staat moet gebeuren.
+[setup](./setup.md)
+
+### Configuratie files gebruiken
+
+Hier vind je hoe je onze configuratie files moet toevoegen aan je eigen home assistant os.
+[configuratie files](./configuratie.md)
+
+### Dag van de wetenschap
 
 Hier vind je meer uitleg over alles voor de dag van de wetenschap
 [DVDW](Dag_Van_De_Wetenschap.md)
 
-### powersuply script
+### Powersuply script
 
 Een script om aan de hand van mqtt de waarden van een voeding aan te passen. Dit gebeurt met USB aan de hand van SCPI commands.
 Aan de hand van het script kan met mqtt de stroom, spanning geregeld worden. Ten laatste kan een sinus gebruikt worden om de stroom te bepalen, op deze manier wordt een dag en nacht cyclus gesimuleerd.
@@ -93,9 +100,9 @@ Hier vind je meer info over de toestellen die we gebruiken in ons project.
 
 [Configuratie Smart-devices](config_smart_devices.md)
 
-### uitleg home assistant
+### Uitleg home assistant
 
-Hier vind je meer uitleg over de zaken die we binnen home assistant gebruikt hebben.
+Hier vind je meer uitleg over de zaken die we binnen home assistant gebruikt hebben. Hier vind je bijvoorbeeld hoe we de verschillende dashboards gemaakt hebben.
 
 [home assistant](hass.md)
 
