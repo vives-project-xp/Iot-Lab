@@ -582,7 +582,7 @@ Met value_template zorgen we ervoor dat de switch de on state krijgt wanneer de 
 Dit dashboard bestaat uit twee kolommen, één voor DVDW en één voor alles IOT_LAB.
 De eerste kolom is deze voor DVDW deze verschilt van het DVDW doordat er zoals eerder verteld meer controle is over de voeding, daarnaast worden er ook meer gegevens getoond zoals een grafiek van de stroom van de voeding. In beide kolommen bevindt er zich eerst een titel, maar bij de kolom van DVDW staat er hiernaast ook nog een button die gaat naar het DVDW dashboard en een button die gaat naar het overview dashboard. De eerste button is bedoeld als een back button, deze kan namelijk gebruikt worden als er op DVDW meer controle over de voeding nodig was en we daarna terug willen naar het simpelere dashboard. Hierna is er een card waarmee we de verschillende bouwlampen kunnen aan en uit zetten. Ten laatste staat er een grafiek die de verandering van de stroom volgt.
 
-In de Iot_lab kolom
+In de Iot_lab kolom worden de states getoond van de sites en services die wij monitoren. Daarnaast wordt data over het alarm getoond. Vervolgens worden de waarden van twee weather sensors getoond. Ten laatste worden getrackte devices getoond, met erbij of ze thuis zijn ofniet.
 
 ![dashboard deel 1](/img/DVDW%26IOT_LAB_dashboard.png)
 ![dashboard deel 2](/img/DVDW&IOT_LAB_2.png)
@@ -601,23 +601,12 @@ icon: mdi:backburger
 icon_height: 50px # icon height om ervoor te zorgen dat de button niet te groot wordt
 ```
 
-2. card voor aansturing van de voeding
-Met deze card kan de voeding aangestuurd worden, dit is gewoon een simpele entities card met al de gebruikte entities. 
-
-```yaml
-type: entities
-entities:
-  - entity: switch.powersupply_switch
-  - entity: switch.current_effect_switch
-  - entity: input_number.voltage_slider
-  - entity: input_number.current_slider
-state_color: true
-```
-
-3. grid card om de bouwlampen aan te sturen
+2. grid card om de bouwlampen aan te sturen
 Om de verschillende buttons mooi naast elkaar te krijgen hebben we gebruik gemaakt van een grid. 
 
 ```yaml
+square: true
+columns: 3
 type: grid
 cards:
   - show_name: true
@@ -626,21 +615,25 @@ cards:
     tap_action:
       action: toggle
     entity: switch.lumi_lumi_plug_maeu01_switch
+    name: Koelkast
   - show_name: true
     show_icon: true
     type: button
     tap_action:
       action: toggle
     entity: switch.bouwlamp2_plug_3
+    name: Boiler
   - show_name: true
     show_icon: true
     type: button
     tap_action:
       action: toggle
     entity: switch.dvdw_plug3
+    name: Oven
+    icon: mdi:toggle-switch-variant
 ```
 
-4. grafiek stroom
+3. grafiek stroom
 Voor de grafiek van de stroom hebben we gebruik gemaakt van een apexcharts-card.
 Deze card werkt niet perfect, maar is momenteel de beste oplossing die we gevonden hebben.
 
@@ -648,9 +641,6 @@ Deze card werkt niet perfect, maar is momenteel de beste oplossing die we gevond
 type: custom:apexcharts-card
 graph_span: 10m
 update_interval: 2s
-span:
-  start: minute
-  offset: '-5m'
 header:
   show: true
   title: Stroom
@@ -658,48 +648,78 @@ header:
   colorize_states: true
 series:
   - entity: sensor.currunt
+    curve: stepline
+now:
+  show: true
+  label: nu
+all_series_config:
+  stroke_width: 2
+  opacity: 0.3
+  type: area
 ```
 
-5. weather sensor card
+4. weather sensor cards
 Een card die alle waarden van de weather sensor toont, dit is een simpele entities card.
 
 ```yaml
 type: entities
 entities:
-  - entity: sensor.lumi_lumi_weather_humidity
   - entity: sensor.lumi_lumi_weather_temperature
   - entity: sensor.lumi_lumi_weather_pressure
+  - entity: sensor.lumi_lumi_weather_humidity
+  - entity: sensor.lumi_lumi_weather_battery
+title: Sensor Lumi 1
 ```
 
-6. state monitoring cards
-Dit zijn history graph cards die tonen wanneer een service down was en wanneer up.
+5. state monitoring
+Dit is een entities card die de state van alle services en sites toont.
 
 ```yaml
-type: history-graph
+type: entities
 entities:
+  - entity: binary_sensor.devbit_mqtt_broker
   - entity: binary_sensor.redmine_devbit
-title: Redmine/project.devbit
+  - entity: binary_sensor.app_thumfi
+  - entity: binary_sensor.graduaat
+  - entity: binary_sensor.dust
+  - entity: binary_sensor.vives
+  - entity: binary_sensor.landing_thumfi
+title: State monitoring
+show_header_toggle: true
+state_color: false
 ```
 
-7. door sensor entity card
-Dit is een simpele entity card die de status van de door sensor toont.
+6. alarm card
+Dit is een entities card die alles over het alarm toont
 
 ```yaml
-type: entity
-entity: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+type: entities
+entities:
+  - entity: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+  - entity: light.ph1_alarm
+    name: Alarm identifier
+  - entity: input_boolean.alarm_state
+    name: Alarm State
+  - entity: binary_sensor.motion_sensor_home_security_motion_detection
+title: Alarm Creation
 ```
 
-#### Battery levels dashboard
-
-Een simpele dashboard die de battery levels van sensoren met een batterij toont.
-
-![battery dashboard](/img/battery_dash.png)
-
-Er wordt in dit dashboard gebruik gemaakt van simpele entity cards.
+7. device tracker
+Een entities card die alle devices toont
 
 ```yaml
-type: entity
-entity: sensor.lumi_lumi_weather_battery
+type: custom:auto-entities
+show_empty: false
+card:
+  type: entities
+  title: Device Trackers home
+  show_header_toggle: false
+filter:
+  include:
+    - domain: device_tracker
+    - state: home
+  exclude:
+    - state: not_home
 ```
 
 ## Home Assistant Grafana Dashboard
