@@ -15,7 +15,7 @@ Dit project is gerealiseerd op home assistant. Deze home assitant krijgt alle da
 - [<img src="https://github.com/LukasHoste.png" width="25"> Lukas Hoste](https://github.com/LukasHoste)
 - [<img src="https://github.com/MatiasVereecke.png" width="25"> Matias Vereecke](https://github.com/MatiasVereecke)
 - [<img src="https://github.com/JarnoMechele.png" width="25"> Jarno Mechele](https://github.com/JarnoMechele)
-- [<img src="https://github.com/Brent Schaepdrijver.png" width="25"> Brent Schaepdrijver](https://github.com/Brent-Schaepdrijver)
+- [<img src="https://github.com/Brent-Schaepdrijver.png" width="25"> Brent Schaepdrijver](https://github.com/Brent-Schaepdrijver)
 - [<img src="https://github.com/Smiley078.png" width="25"> Maxim Govaert ](https://github.com/Smiley078)
 - [<img src="https://github.com/jonckheereke.png" width="25"> Robin Jonckheere](https://github.com/jonckheereke)
 
