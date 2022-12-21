@@ -641,3 +641,72 @@ mode: single
 
 - trigger: De oven wordt aangezet
 - action: De boiler wordt uitgezet
+
+5. waarde van een slider publishen naar mqtt (stroom)
+
+```yaml
+alias: powersupply current
+description: ""
+trigger:
+  - entity_id: input_number.current_slider
+    platform: state
+action:
+  - service: mqtt.publish
+    data:
+      payload_template: "{{ states('input_number.current_slider') | float }}"
+      topic: current
+      retain: true
+```
+
+- trigger: De waarde van de slider verandert
+- action: haal de waarde van de slider op en publish het naar de current topic als een float
+
+6. waarde van een slider aanpassen met een button
+
+```yaml
+alias: zon onder
+description: ""
+trigger:
+  - device_id: 58b656184167d7fe2d0c4ce54c4e9dba
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: dim_down
+  - device_id: 58b656184167d7fe2d0c4ce54c4e9dba
+    domain: zha
+    platform: device
+    type: remote_button_long_press
+    subtype: dim_down
+condition: []
+action:
+  - service: input_number.decrement
+    data: {}
+    target:
+      entity_id: input_number.current_slider
+mode: single
+```
+
+- trigger: er wordt op een button gedrukt
+- action: verminder de waarde van de button met 1, indien increment zou gebruikt worden vermeerderd de waarde met 1
+
+## Iot Lab automations
+
+1. stuur een melding wanneer de humiditeit te hoog is
+
+```yaml
+alias: humidity too high
+description: ""
+trigger:
+  - platform: numeric_state
+    entity_id: sensor.lumi_lumi_weather_humidity
+    above: 65
+condition: []
+action:
+  - service: notify.whatsapp_message_phone1
+    data:
+      message: the humidity is high, consider opening a window
+mode: single
+```
+
+- trigger: de humiditeit is boven de 65%
+- action: stuur een bericht naar de gebruiker
