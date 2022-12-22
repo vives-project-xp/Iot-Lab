@@ -11,28 +11,45 @@ trigger:
   - platform: time
     at: "08:15:00"
     id: morning
+    enabled: false
   - platform: time
     at: "19:15:00"
     id: evening
-condition: []
+    enabled: false
+  - platform: state
+    entity_id:
+      - schedule.school_open
+    from: "off"
+    to: "on"
+    id: school open
+  - platform: state
+    entity_id:
+      - schedule.school_open
+    id: school closed
+    from: "on"
+    to: "off"
 action:
   - choose:
       - conditions:
           - condition: trigger
-            id: morning
+            id: school open
         sequence:
           - service: rest_command.post_spongebob
             data: {}
       - conditions:
           - condition: trigger
-            id: evening
+            id: school closed
         sequence:
           - service: rest_command.post_black
             data: {}
 mode: single
+
 ```
 
 In deze automation zijn de triggers twee tijdstippen. Als het kwart na acht is wordt de post spongebob rest command uitgevoerd en als het avond is wordt de post black command uitgevoerd.
+
+- trigger: time ochtend en avond of een schedule helper -> als de schedule helper aan gaat mag alles aan anders moet het uit
+- action: als er school is post een meme, als er geen school is post het een zwarte foto.
 
 ## Security
 
