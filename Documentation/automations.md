@@ -38,7 +38,7 @@ In deze automation zijn de triggers twee tijdstippen. Als het kwart na acht is w
 
 1. Snapshot nemen wanneer er niemand in een lokaal hoort te zijn, maar er toch motion is.
 
-Voor deze automatie wordt gebruik gemaakt van google calendar en een motion sensor om een snapshot te sturen via een melding. We doen dit voor security er kan zo niemand zich in de klas bevinden wanneer er geen les is. Een mogelijke uitbreiding hierbij is om ervoor te zorgen dat dit niet gebeurt wanneer ons "alarm" uitgezet is.
+Voor deze automatie wordt gebruik gemaakt van een google calendar en een motion sensor om een snapshot te sturen via een melding. We doen dit voor security, zodat er niemand in het lokaal kan zijn wanneer er geen les is. Een mogelijke uitbreiding hierbij is om ervoor te zorgen dat dit niet gebeurt wanneer ons "alarm" uitgezet is.
 
 ```yaml
 alias: send snapshot when motion and calendar event
@@ -50,36 +50,49 @@ trigger:
     from: "off"
     to: "on"
     enabled: true
+  - platform: calendar
+    event: start
+    offset: "0:0:0"
+    entity_id: calendar.timeedit_bxh_a308_labo_elektronica_24p_cbru_0_20221101
+    enabled: false
 condition:
   - condition: state
     entity_id: calendar.timeedit_bxh_a308_labo_elektronica_24p_cbru_0_20221101
-    state: "off"
+    state: "on"
 action:
   - service: camera.snapshot
     target:
-      entity_id: camera.192_168_1_138
+      entity_id:
+        - camera.192_168_1_117
     data:
-      filename: /media/camera/camera1.png
+      filename: /media/Camera_1/last_motion.jpg
+  - service: camera.snapshot
+    target:
+      entity_id:
+        - camera.192_168_1_117
+    data:
+      filename: /media/Camera_1//archive/motion_{{ now().strftime("%Y%m%d-%H%M%S")}}.jpg
   - delay:
       hours: 0
       minutes: 0
       seconds: 2
       milliseconds: 0
-  - service: notify.mobile_app_sm_a528b
+  - service: notify.all_devices
     data:
-      title: Camera 1
       message: Camera 1
+      title: Camera 1
       data:
-        image: /media/local/camera/camera1.png
+        image: /media/local/Camera_1/last_motion.jpg
+
 ```
 
 - trigger: In het trigger gedeelte kijken we of de state van de fibaro motion sensor van off naar on gaat. Hier staat off voor clear/geen motion detected en on voor motion detected.
-- condition: In de condition controler of er op dit moment geen les is in het lokaal. We willen namelijk enkel een snapshot nemen en versturen wanneer er geen les hoort te zijn en dus ook geen motion.
+- condition: In de condition controlleert of er op dit moment geen les is in het lokaal. We willen namelijk enkel een snapshot nemen en versturen wanneer er geen les hoort te zijn en dus ook geen motion.
 - action: In het action gedeelte voeren we meerdere actions uit. Ten eerste wordt er een foto genomen door de geselecteerde camera en wordt deze opgeslagen. Hierna wachten we enkele seconden, om daarna de genomen foto te versturen in een melding naar de home assistant app.
 
 2. Aan en uitzetten van alarm aan de hand van NFC tag.
 
-Aan de hand van de volgende automaties wordt het alarm aan en uitgezet bij het scannen van een NFC tag. Wanneer deze tag gescanned wordt, zal ook een snapshot genomen worden die opgestuurd wordt naar de home assistant app. Deze automatisatie cycled door de helper die is aangemaakt met 2 options.
+Aan de hand van de volgende automaties wordt het alarm aan en uitgezet bij het scannen van een NFC tag. Wanneer deze tag gescanned wordt, zal ook een snapshot genomen worden die opgestuurd wordt naar de home assistant app. Deze automatisatie cycled door de helper die aangemaakt is met 2 options.
 
 ![helper](./img/helper_color.png)
 
@@ -96,10 +109,16 @@ action:
     target:
       entity_id: input_select.tag_color_toggle
   - service: camera.snapshot
-    target:
-      entity_id: camera.192_168_1_138
     data:
-      filename: /media/camera/camera1.png
+      filename: /media/Camera_1/last_motion.jpg
+    target:
+      entity_id: camera.192_168_1_117
+  - service: camera.snapshot
+    target:
+      entity_id:
+        - camera.192_168_1_117
+    data:
+      filename: /media/Camera_1//archive/motion_{{ now().strftime("%Y%m%d-%H%M%S")}}.jpg
   - delay:
       hours: 0
       minutes: 0
@@ -110,12 +129,11 @@ action:
       title: Camera 1
       message: Camera 1
       data:
-        image: /media/local/camera/camera1.png
-
+        image: /media/local/Camera_1/last_motion.jpg
 ```
 
-- trigger: De trigger van deze automatie is wanneer een gespecifieerde NFC tag gescanned wordt.
-- actions: Ten eerste cyclen we door een input_select helper deze helper triggered onderstaande automaties die ervoor zorgen dat de lichten van kleur veranderen. Vervolgens voeren we dezelfde actions uit zoals hierboven uitgelegd om een snapshot te nemen en te versturen.
+- trigger: De trigger van deze automatie is een gespecifieerde NFC tag.
+- actions: Ten eerste cyclen we door een input_select helper, deze helper triggered onderstaande automaties die ervoor zorgen dat de lichten van kleur veranderen. Vervolgens voeren we dezelfde actions uit zoals hierboven uitgelegd om een snapshot te nemen en te versturen.
 
 ```yaml
 alias: lights red
@@ -153,10 +171,10 @@ action:
     data: {}
 ```
 
-- trigger: De trigger van deze automatie is wanneer de tag_color_toggle input_select helper verandert naar red_light.
-- actions: Ten eerste zetten we de input_boolean die de state van ons alarm aantoont op on. Hierna wordt een script gerunt die de lamp op rood zet. Het script wordt hieronder uitgelegd
+- trigger: De trigger van deze automatie is wanneer de tag_color_toggle en input_select helper verandert naar red_light.
+- actions: Ten eerste zetten we de input_boolean die de state van ons alarm aantoont op on. Hierna wordt een script gerunt die de lamp op rood zet. Het script wordt hieronder uitgelegd.
 
-Dit script zal ervoor zorgen dat de lamp rood wordt (dashboard lamp 1). Hiervoor wordt er een service opgemaakt die de lamp aansteekt met het bepaald kleur (bv: rood zoals hieronder). Ook wordt er gestuurd via een whatsapp notificatie als het alarm aan of uit is. Vervolgens wordt de google hub aangestuurd en wordt er bijvoorbeeld gezegd: "Alarm is on". Hiervoor wordt er een media player service opgesteld, een delay aan toegevoegd van 4 seconden (zodat de text-to-speech niet blokkeert) en dan de media player uitzetten als laatste. Hetzelfde bij de "light go green"-script.
+Dit script zal ervoor zorgen dat de lamp rood wordt (phillips hue lamp). Hiervoor wordt er een service opgemaakt die de lamp aansteekt met het bepaald kleur (bv: rood zoals hieronder). Ook wordt er gestuurd via een whatsapp notificatie als het alarm aan of uit is. Vervolgens wordt de google hub aangestuurd en wordt er bijvoorbeeld gezegd: "The alarm is on". Hiervoor wordt er een media player service opgesteld, een delay aan toegevoegd van 4 seconden (zodat de text-to-speech niet blokkeert) en dan de media player uitzetten als laatste. Hetzelfde bij de "light go green"-script.
 
 ```yaml
 alias: light go red
@@ -168,7 +186,7 @@ sequence:
         - 0
         - 0
     target:
-      entity_id: light.dashboard_lamp_1
+      entity_id: light.ph1_alarm
   - service: input_select.select_first
     data: {}
     target:
@@ -177,6 +195,11 @@ sequence:
     data:
       message: The alarm is turned on.
       title: ALARM
+  - service: media_player.volume_set
+    data:
+      volume_level: 0.6
+    target:
+      device_id: 0300c8ca212177a3923003f6cceb9dbd
   - service: media_player.play_media
     target:
       entity_id: media_player.nesthub0c4d
@@ -206,17 +229,68 @@ sequence:
 mode: single
 ```
 
+```yaml
+alias: light go green
+sequence:
+  - service: light.turn_on
+    data:
+      rgb_color:
+        - 0
+        - 255
+        - 0
+    target:
+      entity_id: light.ph1_alarm
+  - service: input_select.select_last
+    entity_id: input_select.tag_color_toggle
+  - service: notify.whatsapp_message_phone1
+    data:
+      message: The alarm is turned off.
+      title: "ALARM "
+  - service: media_player.volume_set
+    data:
+      volume_level: 0.6
+    target:
+      device_id: 0300c8ca212177a3923003f6cceb9dbd
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.nesthub0c4d
+    data:
+      media_content_id: media-source://tts/google_translate?message=The+alarm+is+off
+      media_content_type: provider
+    metadata:
+      title: The alarm is off
+      thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+      media_class: app
+      children_media_class: null
+      navigateIds:
+        - {}
+        - media_content_type: app
+          media_content_id: media-source://tts
+        - media_content_type: provider
+          media_content_id: media-source://tts/google_translate?message=The+alarm+is+off
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 4
+      milliseconds: 0
+  - service: media_player.turn_off
+    data: {}
+    target:
+      device_id: 0300c8ca212177a3923003f6cceb9dbd
+mode: single
+```
+
 ### Alarm creation
 
 Dit script is voor als het alarm aan is en de deur gaat open. (Alarm_Automation_on)
 
--Triggers: Deze automation zal getriggered worden als de deur opengaat en als condition de **Alarm_state** aanstaat.
+-Triggers: Deze automation zal getriggered worden als de deur opengaat en als de condition **Alarm_state** aanstaat.
 
--Actions: Er lopen 3 acions in parallel => het volume wordt aangezet, dan speelt er een geluid voor 10 seconden.
+-Actions: Er lopen 3 acions in parallel => het volume wordt aangezet en dan speelt er een geluid voor 10 seconden.
 
-Daarna komt het in een options:
+Daarna komt het in een options terecht:
 
-1. Als het alarm nog steeds aanstaat, dan zal het alarm afgaan totdat de alarm state wordt uitgezet. En ook een notificatie.
+1. Als het alarm nog steeds aanstaat, dan zal het alarm afgaan totdat het alarm state wordt uitgezet en ook een notificatie.
 
 2. Als het alarm uit is door de NFC-tag, dan zal er een notificatie komen die zal zeggen "Alarm is off".
 
@@ -245,11 +319,10 @@ action:
           entity_id: media_player.nesthub0c4d
         data:
           media_content_id: >-
-            media-source://media_source/local/Never Gonna Give You Up
-            Original.mp3
+            media-source://media_source/local/Countdown_Clock_-_Bombe_Timer_SOUND.mp3
           media_content_type: audio/mpeg
         metadata:
-          title: Never Gonna Give You Up Original.mp3
+          title: Countdown_Clock_-_Bombe_Timer_SOUND.mp3
           thumbnail: null
           media_class: music
           children_media_class: null
@@ -262,6 +335,10 @@ action:
           minutes: 0
           seconds: 10
           milliseconds: 0
+      - service: media_player.media_stop
+        data: {}
+        target:
+          device_id: 0300c8ca212177a3923003f6cceb9dbd
   - choose:
       - conditions:
           - condition: state
@@ -313,6 +390,10 @@ action:
             data:
               message: alarm disarmed
               title: Thanks for disarming the alarm
+          - service: media_player.media_stop
+            data: {}
+            target:
+              device_id: 0300c8ca212177a3923003f6cceb9dbd
 mode: single
 ```
 
@@ -397,6 +478,10 @@ action:
                     minutes: 0
                     seconds: 5
                     milliseconds: 0
+          - service: media_player.media_stop
+            data: {}
+            target:
+              device_id: 0300c8ca212177a3923003f6cceb9dbd
       - conditions:
           - type: is_not_open
             condition: device
@@ -417,7 +502,7 @@ mode: single
 
 ## DVDW automations
 
-1. lichten van kleur veranderen afhankelijk van of het nacht of dag is in de simulatie van een dag
+1. Lichten van kleur veranderen afhankelijk van of het nacht of dag is in de simulatie van een dag.
 
 ```yaml
 alias: Night/Day toggle
@@ -476,8 +561,8 @@ action:
 mode: single
 ```
 
-- triggers: In deze automatie maken we gebruik van trigger ID's om een onderscheide te maken tussen verschillende triggers en dan andere actions uit te gaan voeren. We hebben hier twee triggers wanneer de switch van off naar on gaat en het dus dag wordt en wanneer de switch van on naar off gaat en het dus nacht wordt.
-- action: In onze action zetten we eerst de lamp aan om vervolgens een choose action te gebruiken. Hierin kan aan de hand van ons entity ID gekozen worden welke action uitgevoerd moet worden. Wanneer de id night zetten we de lamp op een wit/lichtblauwe kleur en wanneer de ID day is op een oranje kleur.
+- triggers: In deze automatie maken we gebruik van trigger ID's om een onderscheiding te maken tussen verschillende triggers en dan andere actions uit te gaan voeren. We hebben hier twee triggers wanneer de switch van off naar on gaat en het dus dag wordt en wanneer de switch van on naar off gaat en het dus nacht wordt.
+- action: In onze action zetten we eerst de lamp aan om vervolgens een choose action te gebruiken. Hierin kan aan de hand van ons entity ID gekozen worden welke action uitgevoerd moet worden. Wanneer de id=night, zetten we de lamp op een wit/lichtblauwe kleur en wanneer de ID=day, zetten we de lamp op een oranje kleur.
 
 2. Aan en uitzetten van koelkast afhankelijk van state van simulatie dag
 
@@ -545,7 +630,7 @@ action:
 mode: single
 ```
 
-- trigger: De trigger van deze automation is de push van een button
+- trigger: De trigger van deze automation is de push van een button.
 - action: Als action wordt een script uitgevoerd die een actionable notification stuurt en wordt als data de naam van het device meegestuurd.
 
 ```yaml
@@ -570,7 +655,7 @@ sequence:
 mode: single
 ```
 
-Het script dat door de automatie gerunt wordt stuurt een actionable notification naar de home assistant app met twee buttons. Wanneer op deze buttons gedrukt wordt zal de action met de naam TURN_ON_deviceName (bv. boiler) of TURN_OFF_deviceName uitgevoerd worden. Momenteel is hier nog het verbruik hardcoded, maar het zou de bedoeling zijn om ook dit als argument mee te geven aan het script.
+Het script dat door de automatie gerunt wordt, stuurt een actionable notification naar de home assistant app met twee buttons. Wanneer op deze buttons gedrukt wordt, zal de action met de naam TURN_ON_deviceName (bv. boiler) of TURN_OFF_deviceName uitgevoerd worden. Momenteel is hier nog het verbruik hardcoded, maar het zou de bedoeling zijn om ook dit als argument mee te geven aan het script.
 
 Vervolgens hebben we nog een automation die de verschillende actions van onze actionable notifcation handled.
 
@@ -618,7 +703,6 @@ mode: single
 - trigger: De triggers van deze automatie gebeuren wanneer een mobile_app_notification_action ontvangen wordt. Deze triggers hebben een trigger ID om bij action een geschikte action te kunnen kiezen.
 - action: Als actions wordt afhankelijk van het trigger ID een switch aan of uit gezet.
 
-
 4. De boiler uitzetten wanneer de oven aangezet wordt
 
 ```yaml
@@ -639,10 +723,10 @@ action:
 mode: single
 ```
 
-- trigger: De oven wordt aangezet
-- action: De boiler wordt uitgezet
+- trigger: De oven wordt aangezet.
+- action: De boiler wordt uitgezet.
 
-5. waarde van een slider publishen naar mqtt (stroom)
+5. Waarde van een slider publishen naar mqtt (stroom)
 
 ```yaml
 alias: powersupply current
@@ -658,10 +742,10 @@ action:
       retain: true
 ```
 
-- trigger: De waarde van de slider verandert
-- action: haal de waarde van de slider op en publish het naar de current topic als een float
+- trigger: De waarde van de slider verandert.
+- action: Haal de waarde van de slider op en publish het naar de current topic als een float.
 
-6. waarde van een slider aanpassen met een button
+6. Waarde van een slider aanpassen met een button
 
 ```yaml
 alias: zon onder
@@ -686,12 +770,12 @@ action:
 mode: single
 ```
 
-- trigger: er wordt op een button gedrukt
-- action: verminder de waarde van de button met 1, indien increment zou gebruikt worden vermeerderd de waarde met 1
+- trigger: Er wordt op een button gedrukt.
+- action: Verminder de waarde van de button met 1, indien increment zou gebruikt worden vermeerderd de waarde met 1.
 
 ## Iot Lab automations
 
-1. stuur een melding wanneer de humiditeit te hoog is
+1. Stuur een melding wanneer de humiditeit te hoog is.
 
 ```yaml
 alias: humidity too high
@@ -708,5 +792,5 @@ action:
 mode: single
 ```
 
-- trigger: de humiditeit is boven de 65%
-- action: stuur een bericht naar de gebruiker
+- trigger: De humiditeit is boven de 65%.
+- action: Stuur een bericht naar de gebruiker.
