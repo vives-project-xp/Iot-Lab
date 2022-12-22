@@ -1,0 +1,17 @@
+actual_energy:
+  name: Actual Energy
+  entities:
+    - sensor.tarif
+    - sensor.active_voltage_l1
+    - sensor.active_current_l1
+    - sensor.actual_power_consumption_2
+    - sensor.actual_power_production_2
+energy_meters:
+  name: Energy Meters
+  entities:
+    - sensor.consumption_low_tarif
+    - sensor.consumption_high_tarif
+    - sensor.production_low_tarif
+    - sensor.production_high_tarif
+    - sensor.gas
+    - sensor.water

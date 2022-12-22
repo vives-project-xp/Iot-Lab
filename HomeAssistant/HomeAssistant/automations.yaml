@@ -1,0 +1,1148 @@
+- id: "1664454980176"
+  alias: test_push_notif
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.youtube_test
+        - binary_sensor.google_test
+        - binary_sensor.jarno_test
+      from: "on"
+      to: "off"
+  condition: []
+  action:
+    - service: notify.mobile_app_sm_a530f
+      data:
+        message: Jarno is offline
+        title: WARNING!!!
+  mode: single
+- id: "1665065402814"
+  alias: MQTT publish voltage
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - input_number.voltage
+      attribute: initial
+  condition: []
+  action: []
+  mode: single
+- id: "1665648875330"
+  alias: Aan
+  description: ""
+  trigger:
+    - type: opened
+      platform: device
+      device_id: dd68653e7801c9978c9305e192d66903
+      entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+      domain: binary_sensor
+  condition: []
+  action:
+    - type: turn_on
+      device_id: 5cca663629debf9ad3f6fd06e448dc1e
+      entity_id: switch.lumi_lumi_plug_maeu01_switch_2
+      domain: switch
+  mode: single
+- id: "1665648904980"
+  alias: powersupply voltage
+  description: ""
+  trigger:
+    - entity_id: input_number.voltage_slider
+      platform: state
+  action:
+    - service: mqtt.publish
+      data:
+        payload_template: "{{ states('input_number.voltage_slider') | int }}"
+        topic: voltage
+        retain: true
+- id: "1665648904981"
+  alias: powersupply current
+  description: ""
+  trigger:
+    - entity_id: input_number.current_slider
+      platform: state
+  action:
+    - service: mqtt.publish
+      data:
+        payload_template: "{{ states('input_number.current_slider') | float }}"
+        topic: current
+        retain: true
+- id: "1665665402210"
+  alias: zon op
+  description: ""
+  trigger:
+    - device_id: 58b656184167d7fe2d0c4ce54c4e9dba
+      domain: zha
+      platform: device
+      type: remote_button_short_press
+      subtype: dim_up
+    - device_id: 58b656184167d7fe2d0c4ce54c4e9dba
+      domain: zha
+      platform: device
+      type: remote_button_long_press
+      subtype: dim_up
+  condition: []
+  action:
+    - service: input_number.increment
+      data: {}
+      target:
+        entity_id: input_number.current_slider
+  mode: single
+- id: "1665665757766"
+  alias: zon onder
+  description: ""
+  trigger:
+    - device_id: 58b656184167d7fe2d0c4ce54c4e9dba
+      domain: zha
+      platform: device
+      type: remote_button_short_press
+      subtype: dim_down
+    - device_id: 58b656184167d7fe2d0c4ce54c4e9dba
+      domain: zha
+      platform: device
+      type: remote_button_long_press
+      subtype: dim_down
+  condition: []
+  action:
+    - service: input_number.decrement
+      data: {}
+      target:
+        entity_id: input_number.current_slider
+  mode: single
+- id: "1665666367455"
+  alias: zon aan
+  description: ""
+  trigger:
+    - device_id: 58b656184167d7fe2d0c4ce54c4e9dba
+      domain: zha
+      platform: device
+      type: remote_button_short_press
+      subtype: turn_on
+  condition: []
+  action:
+    - service: switch.turn_on
+      data: {}
+      target:
+        entity_id: switch.powersupply_switch
+    - type: turn_on
+      device_id: 5ee06c278fdd78f7345cc3c2d713804c
+      entity_id: light.bkl1262_gu10_rgb_cct_3
+      domain: light
+    - type: turn_on
+      device_id: d3f76f340078b130374bbc01e48c67a0
+      entity_id: light.bkl1262_gu10_rgb_cct
+      domain: light
+    - type: turn_on
+      device_id: 8812c8c242c66bdd5624ee70d85169b6
+      entity_id: light.bkl1262_gu10_rgb_cct_2
+      domain: light
+  mode: single
+- id: "1665666429010"
+  alias: zon uit
+  description: ""
+  trigger:
+    - device_id: 58b656184167d7fe2d0c4ce54c4e9dba
+      domain: zha
+      platform: device
+      type: remote_button_short_press
+      subtype: turn_off
+  condition: []
+  action:
+    - service: switch.turn_off
+      data: {}
+      target:
+        entity_id: switch.powersupply_switch
+    - type: turn_off
+      device_id: 8812c8c242c66bdd5624ee70d85169b6
+      entity_id: light.bkl1262_gu10_rgb_cct_2
+      domain: light
+    - type: turn_off
+      device_id: d3f76f340078b130374bbc01e48c67a0
+      entity_id: light.bkl1262_gu10_rgb_cct
+      domain: light
+    - type: turn_off
+      device_id: 5ee06c278fdd78f7345cc3c2d713804c
+      entity_id: light.bkl1262_gu10_rgb_cct_3
+      domain: light
+  mode: single
+- id: "1665667809531"
+  alias: High consumption
+  description: When there is a high consumption then the wled's red leds will go on.
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.l1_power_consumption
+      above: 0.3
+  condition: []
+  action:
+    - type: turn_on
+      device_id: ddb57eaffc6df8a969e19b6c320ce7fe
+      entity_id: light.wled_segment_3
+      domain: light
+    - type: turn_on
+      device_id: ddb57eaffc6df8a969e19b6c320ce7fe
+      entity_id: light.wled_segment_1
+      domain: light
+    - type: turn_on
+      device_id: ddb57eaffc6df8a969e19b6c320ce7fe
+      entity_id: light.wled_segment_2
+      domain: light
+  mode: single
+- id: "1665668312854"
+  alias: Medium consumption
+  description:
+    When there is a medium consumption then the wled's yellow leds will
+    go on.
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.l1_power_consumption
+      above: 0.01
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 0
+  condition: []
+  action:
+    - type: turn_on
+      device_id: ddb57eaffc6df8a969e19b6c320ce7fe
+      entity_id: light.wled_segment_2
+      domain: light
+    - type: turn_on
+      device_id: ddb57eaffc6df8a969e19b6c320ce7fe
+      entity_id: light.wled_segment_1
+      domain: light
+    - type: turn_off
+      device_id: ddb57eaffc6df8a969e19b6c320ce7fe
+      entity_id: light.wled_segment_3
+      domain: light
+  mode: single
+- id: "1665912105259"
+  alias: Turn on monitors when motion is detected
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.motion_sensor_home_security_motion_detection
+      from: "off"
+      to: "on"
+  condition: []
+  action:
+    - type: turn_on
+      device_id: 5cca663629debf9ad3f6fd06e448dc1e
+      entity_id: switch.lumi_lumi_plug_maeu01_switch_2
+      domain: switch
+  mode: single
+- id: "1665912212876"
+  alias: Turn off monitors when no motion for 15 minutes
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.motion_sensor_home_security_motion_detection
+      from: "on"
+      to: "off"
+      for:
+        hours: 0
+        minutes: 15
+        seconds: 0
+  condition: []
+  action:
+    - type: turn_off
+      device_id: 5cca663629debf9ad3f6fd06e448dc1e
+      entity_id: switch.lumi_lumi_plug_maeu01_switch_2
+      domain: switch
+  mode: single
+- id: "1666260182069"
+  alias: humidity too high
+  description: ""
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.lumi_lumi_weather_humidity
+      above: 65
+  condition: []
+  action:
+    - service: notify.whatsapp_message_phone1
+      data: {}
+  mode: single
+- id: "1666270044323"
+  alias: Product_scan
+  description: Give a message when nfc-tag is scanned
+  trigger:
+    - platform: tag
+      tag_id: 5f2c904b-ed85-4632-aaf2-4b03c042daee
+  condition: []
+  action:
+    - service: notify.whatsapp_message
+      data:
+        message: NFC_TAG SCANNED
+        title: PRODUCT SCANNED
+  mode: single
+- id: "1666271341011"
+  alias: Low Consumption
+  description:
+    When there is a low consumption then the wled's green leds will go
+    on.
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.l1_power_production
+      value_template: ""
+      above: 0.01
+  condition: []
+  action:
+    - type: turn_on
+      device_id: ddb57eaffc6df8a969e19b6c320ce7fe
+      entity_id: light.wled_segment_1
+      domain: light
+    - type: turn_off
+      device_id: ddb57eaffc6df8a969e19b6c320ce7fe
+      entity_id: light.wled_segment_2
+      domain: light
+    - type: turn_off
+      device_id: ddb57eaffc6df8a969e19b6c320ce7fe
+      entity_id: light.wled_segment_3
+      domain: light
+  mode: single
+- id: "1668074366732"
+  alias: From light to dark theme on button
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - switch.daytime
+      from: "on"
+      to: "off"
+  condition: []
+  action:
+    - service: frontend.set_theme
+      data:
+        name: Fluent Green
+        mode: dark
+  mode: single
+- id: "1668074433612"
+  alias: From Dark to light theme on switch press
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - switch.daytime
+      from: "off"
+      to: "on"
+  condition: []
+  action:
+    - service: frontend.set_theme
+      data:
+        name: Fluent Red
+        mode: light
+  mode: single
+- id: "1668076169035"
+  alias: Turn Bouwlampen On
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - automation.test_push_notif_3
+  condition: []
+  action:
+    - type: turn_on
+      device_id: 5ff3bb024d8b8046ecac87357725054f
+      entity_id: switch.metered_wall_plug_switch_2
+      domain: switch
+  mode: single
+- id: "1668079474606"
+  alias: Bouwlampen
+  description: ""
+  trigger:
+    - platform: device
+      device_id: cc7af79f678abdffb3640c8f541a4d6a
+      domain: zwave_js
+      type: event.value_notification.central_scene
+      property: scene
+      property_key: "001"
+      endpoint: 0
+      command_class: 91
+      subtype: Endpoint 0 Scene 001
+  condition: []
+  action:
+    - type: toggle
+      device_id: 5e16bb8fcd7b6c556a5ed7ef42196f56
+      entity_id: switch.dvdw_plug3
+      domain: switch
+  mode: single
+- id: "1668084599123"
+  alias: Bouwlamp2 Switch
+  description: ""
+  trigger:
+    - platform: device
+      device_id: 694d768c2536b86d13ea2abe505c6313
+      domain: zwave_js
+      type: event.value_notification.central_scene
+      property: scene
+      property_key: "001"
+      endpoint: 0
+      command_class: 91
+      subtype: Endpoint 0 Scene 001
+  condition: []
+  action:
+    - type: toggle
+      device_id: db6d7e69c52288cebd3673f3a21be0cf
+      entity_id: switch.bouwlamp2_plug_3
+      domain: switch
+  mode: single
+- id: "1668177131146"
+  alias: Test_calendar_Matias
+  description: ""
+  trigger:
+    - platform: calendar
+      event: start
+      offset: -0:0:0
+      entity_id: calendar.vivesstudent_brugge_gmail_com
+  condition: []
+  action:
+    - service: notify.mobile_app_moto_g_8_plus
+      data:
+        message: HA Message
+        title: "Actionable HA "
+    - service: notify.whatsapp_message_phone2
+      data:
+        message: Whatsapp Message
+        title: "Actionable Whatsapp "
+  mode: single
+- id: "1668453150882"
+  alias: Zet boiler aan wanneer er productie is
+  description: ""
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.l1_power_production
+      above: 0
+  condition: []
+  action:
+    - service: switch.turn_on
+      data: {}
+      target:
+        device_id: 5ff3bb024d8b8046ecac87357725054f
+  mode: single
+- id: "1668453227251"
+  alias: Zet Wasmachine (bouwlamp 2) aan als boiler (b 1) aan als er productie is
+  description: ""
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.l1_power_production
+      above: 0
+  condition:
+    - condition: state
+      entity_id: switch.bouwlamp1_plug_2
+      state: "on"
+  action:
+    - service: switch.turn_on
+      data: {}
+      target:
+        device_id: db6d7e69c52288cebd3673f3a21be0cf
+  mode: single
+- id: "1668689972793"
+  alias: Show DVDW dashboard
+  description: When Google Nest is turned on, the dashboard for DVDW is showed.
+  trigger:
+    - platform: device
+      device_id: 0300c8ca212177a3923003f6cceb9dbd
+      domain: media_player
+      entity_id: media_player.nesthub0c4d
+      type: turned_off
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 30
+  condition: []
+  action:
+    - service: script.cast_dashboard
+      data: {}
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 10
+        milliseconds: 0
+    - service: script.cast_dashboard_2
+      data: {}
+  mode: single
+- id: "1668695358446"
+  alias: Actionable bouwlamp 2_test
+  description: ""
+  trigger:
+    - platform: device
+      device_id: 694d768c2536b86d13ea2abe505c6313
+      domain: zwave_js
+      type: event.value_notification.central_scene
+      property: scene
+      property_key: "001"
+      endpoint: 0
+      command_class: 91
+      subtype: Endpoint 0 Scene 001
+  condition: []
+  action:
+    - service: script.actionable_notification_turn_on_device
+      data:
+        deviceName: boiler
+  mode: single
+- id: "1668695629778"
+  alias: actions from actionable notification
+  description: ""
+  trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: TURN_ON_boiler
+      id: turn_on_device
+    - platform: event
+      event_type: mobile_app_notification_action
+      id: turn_off_device
+      event_data:
+        action: TURN_OFF_boiler
+  condition: []
+  action:
+    - type: toggle
+      device_id: db6d7e69c52288cebd3673f3a21be0cf
+      entity_id: switch.bouwlamp2_plug_3
+      domain: switch
+      enabled: false
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: turn_on_device
+          sequence:
+            - type: turn_on
+              device_id: db6d7e69c52288cebd3673f3a21be0cf
+              entity_id: switch.bouwlamp2_plug_3
+              domain: switch
+        - conditions:
+            - condition: trigger
+              id: turn_off_device
+          sequence:
+            - type: turn_off
+              device_id: db6d7e69c52288cebd3673f3a21be0cf
+              entity_id: switch.bouwlamp2_plug_3
+              domain: switch
+  mode: single
+- id: "1669286653062"
+  alias: Cycle RGB lights
+  description: ""
+  trigger:
+    - platform: tag
+      tag_id: 41094dc2-da31-4a49-8f0e-50ad6d08a20e
+  condition: []
+  action:
+    - service: input_select.select_next
+      data: {}
+      target:
+        entity_id: input_select.tag_color_toggle
+    - service: camera.snapshot
+      data:
+        filename: /media/Camera_1/last_motion.jpg
+      target:
+        entity_id: camera.192_168_1_117
+    - service: camera.snapshot
+      target:
+        entity_id:
+          - camera.192_168_1_117
+      data:
+        filename: /media/Camera_1//archive/motion_{{ now().strftime("%Y%m%d-%H%M%S")}}.jpg
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 2
+        milliseconds: 0
+    - service: notify.mobile_app_sm_a528b
+      data:
+        title: Camera 1
+        message: Camera 1
+        data:
+          image: /media/local/Camera_1/last_motion.jpg
+- id: "1669287685051"
+  alias: lights red
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - input_select.tag_color_toggle
+      to: red_light
+  condition: []
+  action:
+    - service: input_boolean.turn_on
+      data: {}
+      target:
+        entity_id: input_boolean.alarm_state
+    - service: script.light_go_red
+      entity_id: light.lamp1
+- id: "1669287889024"
+  alias: lights green
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - input_select.tag_color_toggle
+      to: green_light
+  condition: []
+  action:
+    - service: input_boolean.turn_off
+      data: {}
+      target:
+        entity_id: input_boolean.alarm_state
+    - service: script.cycle_rgb_lights
+      data: {}
+- id: "1669289764458"
+  alias: koelkast(on/off)
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - switch.powersupply_switch
+      id: psu_off
+      from: "on"
+      to: "off"
+    - platform: state
+      entity_id:
+        - switch.powersupply_switch
+      from: "off"
+      to: "on"
+      id: psu_on
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: psu_off
+          sequence:
+            - type: turn_off
+              device_id: 810484b76179e181971fced662893273
+              entity_id: switch.lumi_lumi_plug_maeu01_switch
+              domain: switch
+        - conditions:
+            - condition: trigger
+              id: psu_on
+          sequence:
+            - type: turn_on
+              device_id: 810484b76179e181971fced662893273
+              entity_id: switch.lumi_lumi_plug_maeu01_switch
+              domain: switch
+  mode: single
+- id: "1669296975712"
+  alias: Oven_melding_On_Off
+  description: ""
+  trigger:
+    - platform: device
+      device_id: cc7af79f678abdffb3640c8f541a4d6a
+      domain: zwave_js
+      type: event.value_notification.central_scene
+      property: scene
+      property_key: "001"
+      endpoint: 0
+      command_class: 91
+      subtype: Endpoint 0 Scene 001
+      enabled: true
+  condition: []
+  action:
+    - type: toggle
+      device_id: 5e16bb8fcd7b6c556a5ed7ef42196f56
+      entity_id: switch.dvdw_plug3
+      domain: switch
+    - service: notify.ALL_DEVICES
+      data:
+        message:
+          "Oven  {{states('switch.dvdw_plug3')}}\nproduction/consumption = (
+          {{ states('sensor.l1_power_production') }} kW / {{ states('sensor.l1_power_consumption')
+          }} kW) \ngemiddeld verbruik = 125W"
+        title: Oven
+  mode: single
+- id: "1669299235971"
+  alias: Oven_Boiler_Off
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.oven
+      from: "off"
+      to: "on"
+  condition: []
+  action:
+    - type: turn_off
+      device_id: db6d7e69c52288cebd3673f3a21be0cf
+      entity_id: switch.bouwlamp2_plug_3
+      domain: switch
+  mode: single
+- id: "1669306170576"
+  alias: Night/Day toggle
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - switch.powersupply_switch
+      from: "on"
+      to: "off"
+      id: night
+    - platform: state
+      entity_id:
+        - switch.powersupply_switch
+      id: day
+      from: "off"
+      to: "on"
+  condition: []
+  action:
+    - service: light.turn_on
+      data:
+        rgb_color:
+          - 139
+          - 215
+          - 253
+      target:
+        entity_id:
+          - light.dashboard_lamp_3
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: night
+          sequence:
+            - service: light.turn_on
+              data:
+                rgb_color:
+                  - 139
+                  - 215
+                  - 253
+              target:
+                entity_id:
+                  - light.dashboard_lamp_3
+        - conditions:
+            - condition: trigger
+              id: day
+          sequence:
+            - service: light.turn_on
+              data:
+                rgb_color:
+                  - 255
+                  - 174
+                  - 0
+              target:
+                entity_id:
+                  - light.dashboard_lamp_3
+  mode: single
+- id: "1669891291099"
+  alias: Deur open melding
+  description: ""
+  trigger:
+    - type: opened
+      platform: device
+      device_id: dd68653e7801c9978c9305e192d66903
+      entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+      domain: binary_sensor
+      for:
+        hours: 0
+        minutes: 10
+        seconds: 0
+  condition: []
+  action:
+    - service: media_player.play_media
+      target:
+        entity_id: media_player.nesthub0c4d
+      data:
+        media_content_id: media-source://tts/google_translate?message=The+door+is+still+open
+        media_content_type: provider
+      metadata:
+        title: The door is still open
+        thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+        media_class: app
+        children_media_class:
+        navigateIds:
+          - {}
+          - media_content_type: app
+            media_content_id: media-source://tts
+          - media_content_type: provider
+            media_content_id: media-source://tts/google_translate?message=The+door+is+still+open
+  mode: single
+- id: "1669898126969"
+  alias: INV_Scoop1
+  description: ""
+  trigger:
+    - platform: tag
+      tag_id: c2cf10da-b7a0-43d8-b7d6-6663f02b0d65
+  condition: []
+  action:
+    - service: input_select.select_next
+      data: {}
+      target:
+        entity_id:
+          - input_select.tag_inventaris
+  mode: single
+- id: "1669899040315"
+  alias: INV_Scoop1_aanwezig
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - input_select.tag_inventaris
+      to: Aanwezig
+  condition: []
+  action:
+    - service: media_player.play_media
+      target:
+        entity_id: media_player.nesthub0c4d
+      data:
+        media_content_id: media-source://tts/google_translate?message=scoop+1+is+terug+aanwezig
+        media_content_type: provider
+      metadata:
+        title: scoop 1 is terug aanwezig
+        thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+        media_class: app
+        children_media_class:
+        navigateIds:
+          - {}
+          - media_content_type: app
+            media_content_id: media-source://tts
+          - media_content_type: provider
+            media_content_id: media-source://tts/google_translate?message=scoop+1+is+terug+aanwezig
+  mode: single
+- id: "1669899187225"
+  alias: INV_scoop1_afwezig
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - input_select.tag_inventaris
+      to: Afwezig
+  condition: []
+  action:
+    - service: media_player.play_media
+      target:
+        entity_id: media_player.nesthub0c4d
+      data:
+        media_content_id: media-source://tts/google_translate?message=scoop+1+is+gepikt.+Breng+het+terug+aub
+        media_content_type: provider
+      metadata:
+        title: scoop 1 is gepikt. Breng het terug aub
+        thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+        media_class: app
+        children_media_class:
+        navigateIds:
+          - {}
+          - media_content_type: app
+            media_content_id: media-source://tts
+          - media_content_type: provider
+            media_content_id: media-source://tts/google_translate?message=scoop+1+is+gepikt.+Breng+het+terug+aub
+  mode: single
+- id: "1669899766621"
+  alias: INV_Scoop2
+  description: ""
+  trigger:
+    - platform: tag
+      tag_id: d6a55c25-59c2-42f8-b9b2-50a628c4c353
+  condition: []
+  action:
+    - service: input_select.select_next
+      data: {}
+      target:
+        entity_id:
+          - input_select.tag_inventaris
+  mode: single
+- id: "1669907284245"
+  alias: Alarm_Automation_on
+  description: Als de deur open gaat en alarm staat aan
+  trigger:
+    - type: opened
+      platform: device
+      device_id: dd68653e7801c9978c9305e192d66903
+      entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+      domain: binary_sensor
+  condition:
+    - condition: state
+      entity_id: input_boolean.alarm_state
+      state: "on"
+  action:
+    - parallel:
+        - service: media_player.volume_set
+          data:
+            volume_level: 0.6
+          target:
+            device_id: 0300c8ca212177a3923003f6cceb9dbd
+        - service: media_player.play_media
+          target:
+            entity_id: media_player.nesthub0c4d
+          data:
+            media_content_id: media-source://media_source/local/Countdown_Clock_-_Bombe_Timer_SOUND.mp3
+            media_content_type: audio/mpeg
+          metadata:
+            title: Countdown_Clock_-_Bombe_Timer_SOUND.mp3
+            thumbnail:
+            media_class: music
+            children_media_class:
+            navigateIds:
+              - {}
+              - media_content_type: app
+                media_content_id: media-source://media_source
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 10
+            milliseconds: 0
+        - service: media_player.media_stop
+          data: {}
+          target:
+            device_id: 0300c8ca212177a3923003f6cceb9dbd
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: input_boolean.alarm_state
+              state: "on"
+          sequence:
+            - repeat:
+                until:
+                  - condition: state
+                    entity_id: input_boolean.alarm_state
+                    state: "off"
+                sequence:
+                  - service: notify.whatsapp_message_phone1
+                    data:
+                      message: SOMEONE ENTERED WITHOUT SCANNING
+                      title: THE ALARM IS GOING OFF
+                  - service: media_player.volume_set
+                    data:
+                      volume_level: 0.5
+                    target:
+                      device_id: 0300c8ca212177a3923003f6cceb9dbd
+                  - service: media_player.play_media
+                    target:
+                      entity_id: media_player.nesthub0c4d
+                    data:
+                      media_content_id: media-source://media_source/local/salamisound-1344064-siren-howling-even-from-very.mp3
+                      media_content_type: audio/mpeg
+                    metadata:
+                      title: salamisound-1344064-siren-howling-even-from-very.mp3
+                      thumbnail:
+                      media_class: music
+                      children_media_class:
+                      navigateIds:
+                        - {}
+                        - media_content_type: app
+                          media_content_id: media-source://media_source
+                  - delay:
+                      hours: 0
+                      minutes: 0
+                      seconds: 7
+                      milliseconds: 0
+        - conditions:
+            - condition: state
+              entity_id: input_boolean.alarm_state
+              state: "off"
+          sequence:
+            - service: notify.whatsapp_message_phone1
+              data:
+                message: alarm disarmed
+                title: Thanks for disarming the alarm
+            - service: media_player.media_stop
+              data: {}
+              target:
+                device_id: 0300c8ca212177a3923003f6cceb9dbd
+  mode: single
+- id: "1669907639530"
+  alias: send snapshot when motion and calendar event
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.motion_sensor_home_security_motion_detection
+      from: "off"
+      to: "on"
+      enabled: true
+    - platform: calendar
+      event: start
+      offset: 0:0:0
+      entity_id: calendar.timeedit_bxh_a308_labo_elektronica_24p_cbru_0_20221101
+      enabled: false
+  condition:
+    - condition: state
+      entity_id: calendar.timeedit_bxh_a308_labo_elektronica_24p_cbru_0_20221101
+      state: "on"
+  action:
+    - service: camera.snapshot
+      target:
+        entity_id:
+          - camera.192_168_1_117
+      data:
+        filename: /media/Camera_1/last_motion.jpg
+    - service: camera.snapshot
+      target:
+        entity_id:
+          - camera.192_168_1_117
+      data:
+        filename: /media/Camera_1//archive/motion_{{ now().strftime("%Y%m%d-%H%M%S")}}.jpg
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 2
+        milliseconds: 0
+    - service: notify.all_devices
+      data:
+        message: Camera 1
+        title: Camera 1
+        data:
+          image: /media/local/Camera_1/last_motion.jpg
+- id: "1670495578910"
+  alias: Alarm_On_When_Door_Open
+  description: ""
+  trigger:
+    - platform: state
+      entity_id:
+        - input_boolean.alarm_state
+      from: "off"
+      to: "on"
+  condition:
+    - type: is_open
+      condition: device
+      device_id: dd68653e7801c9978c9305e192d66903
+      entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+      domain: binary_sensor
+  action:
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 10
+        milliseconds: 0
+    - choose:
+        - conditions:
+            - type: is_open
+              condition: device
+              device_id: dd68653e7801c9978c9305e192d66903
+              entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+              domain: binary_sensor
+          sequence:
+            - service: notify.whatsapp_message_phone1
+              data:
+                title: DOOR IS STILL OPEN, PLEASE CLOSE IT
+                message: "Shut the door or the alarm won't work properly "
+            - repeat:
+                until:
+                  - type: is_not_open
+                    condition: device
+                    device_id: dd68653e7801c9978c9305e192d66903
+                    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+                    domain: binary_sensor
+                sequence:
+                  - service: media_player.volume_set
+                    data:
+                      volume_level: 0.6
+                    target:
+                      device_id: 0300c8ca212177a3923003f6cceb9dbd
+                  - service: media_player.play_media
+                    target:
+                      entity_id: media_player.nesthub0c4d
+                    data:
+                      media_content_id: media-source://tts/google_translate?message=Please+shut+the+door+or+i+will+do+selfdestruct.
+                      media_content_type: provider
+                    metadata:
+                      title: Please shut the door or i will do selfdestruct.
+                      thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+                      media_class: app
+                      children_media_class:
+                      navigateIds:
+                        - {}
+                        - media_content_type: app
+                          media_content_id: media-source://tts
+                        - media_content_type: provider
+                          media_content_id: media-source://tts/google_translate?message=Please+shut+the+door+or+i+will+do+selfdestruct.
+                  - delay:
+                      hours: 0
+                      minutes: 0
+                      seconds: 5
+                      milliseconds: 0
+            - service: media_player.media_stop
+              data: {}
+              target:
+                device_id: 0300c8ca212177a3923003f6cceb9dbd
+        - conditions:
+            - type: is_not_open
+              condition: device
+              device_id: dd68653e7801c9978c9305e192d66903
+              entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+              domain: binary_sensor
+          sequence:
+            - service: notify.whatsapp_message_phone1
+              data:
+                message: Thanks for closing the door
+                title: Door closed
+            - service: media_player.media_stop
+              data: {}
+              target:
+                device_id: 0300c8ca212177a3923003f6cceb9dbd
+  mode: single
+- id: "1670503935485"
+  alias: Send file with http
+  description: ""
+  trigger:
+    - platform: time
+      at: 00:00:00
+  condition: []
+  action:
+    - service: rest_command.post
+      data: {}
+  mode: single
+- id: "1670510757857"
+  alias: Test_2_Send_Save
+  description: ""
+  use_blueprint:
+    path: Matias/Save_Send.yaml
+    input:
+      motion_sensor: binary_sensor.motion_sensor_home_security_motion_detection
+      camera: camera.192_168_1_117
+      calendar_sensor: calendar.timeedit_bxh_a306_labo_iot_25p_cbru_03_a306_20221101
+      file: /media/Camera_1/last_motion.jpg
+      archive_file: /media/Camera_1/archive/motion_{{ now().strftime("%Y%m%d-%H%M%S")}}.jpg
+- id: "1671100641687"
+  alias: Les_labo_308_aan
+  description: Is er les
+  trigger:
+    - platform: calendar
+      event: start
+      offset: 0:0:0
+      entity_id: calendar.timeedit_bxh_a308_labo_elektronica_24p_cbru_0_20221101
+  condition: []
+  action:
+    - service: scene.turn_on
+      target:
+        entity_id: scene.green
+      metadata: {}
+  mode: single
+- id: "1671101954130"
+  alias: Les_labo_308_uit
+  description: Is er les
+  trigger:
+    - platform: calendar
+      event: end
+      offset: -0:2:0
+      entity_id: calendar.timeedit_bxh_a308_labo_elektronica_24p_cbru_0_20221101
+  condition: []
+  action:
+    - service: scene.turn_on
+      target:
+        entity_id: scene.red
+      metadata: {}
+  mode: single
+- id: "1671107844082"
+  alias: POST to screen
+  description: ""
+  trigger:
+    - platform: time
+      at: 08:15:00
+      id: morning
+    - platform: time
+      at: "19:15:00"
+      id: evening
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: morning
+          sequence:
+            - service: rest_command.post_spongebob
+              data: {}
+        - conditions:
+            - condition: trigger
+              id: evening
+          sequence:
+            - service: rest_command.post_black
+              data: {}
+  mode: single

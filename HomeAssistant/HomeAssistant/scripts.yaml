@@ -1,0 +1,153 @@
+"1665664874766":
+  alias: New Script
+  sequence:
+    - device_id: e10ada56342d37ae3f81fe523a2e543d
+      domain: zwave_js
+      type: set_config_parameter
+      parameter: 10
+      bitmask:
+      subtype: "10 (Single Click - Association Group 2: Command Type)"
+      value: 3
+    - service: mqtt.publish
+      data:
+        topic: state
+        payload: "on"
+  mode: single
+  icon: mdi:weather-sunny-alert
+cast_dashboard:
+  alias: Cast dashboard lovelace
+  sequence:
+    - service: cast.show_lovelace_view
+      data:
+        entity_id: media_player.nesthub0c4d
+        dashboard_path: lovelace
+        view_path: default_view
+  mode: single
+  icon: mdi:tablet-dashboard
+cast_dashboard_2:
+  alias: Cast clean-dashboard
+  sequence:
+    - service: cast.show_lovelace_view
+      data:
+        entity_id: media_player.nesthub0c4d
+        dashboard_path: clean-dashboard
+        view_path: "0"
+  mode: restart
+  icon: mdi:tablet-dashboard
+actionable_notification_turn_on_device:
+  alias: Actionable notification (turn on device ??)
+  sequence:
+    - service: notify.ALL_DEVICES
+      data:
+        message:
+          "Do you want to turn on or off the {{ deviceName }} \nproduction/consumption
+          = ( {{ states('sensor.l1_power_production') }} kW / {{ states('sensor.l1_power_consumption')
+          }} kW) \ngemiddeld verbruik = 500W"
+        title: "{{deviceName}}"
+        data:
+          actions:
+            - action: TURN_ON_{{deviceName}}
+              title: Turn on the device
+            - action: TURN_OFF_{{deviceName}}
+              title: Turn off device
+  mode: single
+cycle_rgb_lights:
+  alias: light go green
+  sequence:
+    - service: light.turn_on
+      data:
+        rgb_color:
+          - 0
+          - 255
+          - 0
+      target:
+        entity_id: light.ph1_alarm
+    - service: input_select.select_last
+      entity_id: input_select.tag_color_toggle
+    - service: notify.whatsapp_message_phone1
+      data:
+        message: The alarm is turned off.
+        title: "ALARM "
+    - service: media_player.volume_set
+      data:
+        volume_level: 0.6
+      target:
+        device_id: 0300c8ca212177a3923003f6cceb9dbd
+    - service: media_player.play_media
+      target:
+        entity_id: media_player.nesthub0c4d
+      data:
+        media_content_id: media-source://tts/google_translate?message=The+alarm+is+off
+        media_content_type: provider
+      metadata:
+        title: The alarm is off
+        thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+        media_class: app
+        children_media_class:
+        navigateIds:
+          - {}
+          - media_content_type: app
+            media_content_id: media-source://tts
+          - media_content_type: provider
+            media_content_id: media-source://tts/google_translate?message=The+alarm+is+off
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 4
+        milliseconds: 0
+    - service: media_player.turn_off
+      data: {}
+      target:
+        device_id: 0300c8ca212177a3923003f6cceb9dbd
+  mode: single
+light_go_red:
+  alias: light go red
+  sequence:
+    - service: light.turn_on
+      data:
+        rgb_color:
+          - 255
+          - 0
+          - 0
+      target:
+        entity_id: light.ph1_alarm
+    - service: input_select.select_first
+      data: {}
+      target:
+        entity_id: input_select.tag_color_toggle
+    - service: notify.whatsapp_message_phone1
+      data:
+        message: The alarm is turned on.
+        title: ALARM
+    - service: media_player.volume_set
+      data:
+        volume_level: 0.6
+      target:
+        device_id: 0300c8ca212177a3923003f6cceb9dbd
+    - service: media_player.play_media
+      target:
+        entity_id: media_player.nesthub0c4d
+      data:
+        media_content_id: media-source://tts/google_translate?message=The+alarm+is+on
+        media_content_type: provider
+      metadata:
+        title: The alarm is on
+        thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+        media_class: app
+        children_media_class:
+        navigateIds:
+          - {}
+          - media_content_type: app
+            media_content_id: media-source://tts
+          - media_content_type: provider
+            media_content_id: media-source://tts/google_translate?message=The+alarm+is+on
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 4
+        milliseconds: 0
+    - service: media_player.turn_off
+      data: {}
+      target:
+        device_id: 0300c8ca212177a3923003f6cceb9dbd
+  mode: single
