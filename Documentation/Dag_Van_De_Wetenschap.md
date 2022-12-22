@@ -4,7 +4,7 @@ Voor de dag van de wetenschap maken we een opstelling rond energie. Dit door aan
 
 ## Opstelling
 
-![Digitale Meter](/img/Digitale_Meter.png)
+![Digitale Meter](./img/Digitale_Meter.png)
 
 # CDEM
 
