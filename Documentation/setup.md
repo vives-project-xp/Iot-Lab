@@ -8,4 +8,4 @@ Op deze pi wordt ook het gescript gebruikt die de voeding aanstuurt om de dag te
 
 Voor de opstelling moet je vervolgens de verschillende bouwlampen/toestellen verbinden die we gebruiken om te simuleren. In onze opstelling zijn de verschillende plugs gelabeled met het toestel waarmee verbonden wordt. De koelkast is het toestel dat het minste verbruikt, dan de oven en dan de boiler. Om de oven en boiler aan te sturen worden de buttons gebruikt waarop oven en boiler staan.
 
-Vervolgens moet je de twee cameras aan zetten waarop ... staat, de fibaro motion sensor aanzetten waarop ... staat, de door sensor aanzetten waarop ... staat en de twee weather sensors waarop ... staat.
+Vervolgens moet je de twee cameras aan zetten waarop a306 en a308 staat, de fibaro motion sensor aanzetten waarop motion staat, de door sensor aanzetten waarop door staat en de twee weather sensors waarop lumi 1 en lumi 2 staat.
