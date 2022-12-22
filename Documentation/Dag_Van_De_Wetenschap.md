@@ -48,12 +48,36 @@ Het wijzigen van de apparaatinstellingen kan op elk moment worden gedaan. Het en
 
 ![Config](./img/config_page.jpg)
 
-## Home Assistant
+## Home Assistant Grafana Dashboard
+
+### Influxdb
+
+1. add Influxdb on add-on store
+
+```yml
+configuration.yml
+
+influxdb:
+  host: 192.168.1.131 // IP of  Home Assistant device
+  port: 8086
+  database: iot_lab
+  username: iot
+  password: ######
+  max_retries: 3
+  default_measurement: state
+```
+
+### Node Red
+
+1. Install Node-red in Add-on
+2. Add node-red-contrib-influxdb
+
+3. Add [Flow](./Node_red/flows.json)
 
 ### Grafana
 
-Om de data die vanuit
-
-### Database
-
-### Node-Red
+1. Add data Source
+2. Choose InfluxDb
+3. Add URL : ip of device
+4. Choose database
+5. user iot
