@@ -794,3 +794,54 @@ mode: single
 
 - trigger: De humiditeit is boven de 65%.
 - action: Stuur een bericht naar de gebruiker.
+
+2. Lampen aansturen als er school is of niet.
+
+```yaml
+alias: Turn off and on lamps when school or no school
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - schedule.school_open
+    from: "on"
+    to: "off"
+    id: school closed
+  - platform: state
+    entity_id:
+      - schedule.school_open
+    id: school open
+    from: "off"
+    to: "on"
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: school open
+        sequence:
+          - type: turn_on
+            device_id: ad8d99241424ec276e4918b9aeb3325e
+            entity_id: light.ph1_alarm
+            domain: light
+          - type: turn_on
+            device_id: 6c626b5e9d7224f928480865f39818df
+            entity_id: light.philips_lct015_huelight_2
+            domain: light
+      - conditions:
+          - condition: trigger
+            id: school closed
+        sequence:
+          - type: turn_off
+            device_id: ad8d99241424ec276e4918b9aeb3325e
+            entity_id: light.ph1_alarm
+            domain: light
+          - type: turn_off
+            device_id: 6c626b5e9d7224f928480865f39818df
+            entity_id: light.philips_lct015_huelight_2
+            domain: light
+mode: single
+```
+
+- Trigger: Er zijn 2 trigger id's (school open, school closed).
+- action: De phillips hue lampen gaan aan als er school is en als er geen school is gaan ze uit.
