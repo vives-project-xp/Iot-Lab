@@ -136,7 +136,7 @@ Bij het toevoegen van deze lampen, zal je verschillende opties moeten invullen e
 
 De camera wordt eerst aangesloten aan de router en voeding. We open de eWeLink app. We maken een login account en klikken op add devices. Eenmaal de devices zijn toegevoegd kunnnen we deze integreren in Home assistant.
 
-In home assistant  kunnen we kiezen voor de eWinLink  addon of voor general camera. Bij deze kiezen we voor general camera. Hiervoor hebben we een RSTP addres nodig. Deze kunnen we vinden bij camera instellingen en rtsp. Dit RSTP url plaatsen we in de bar Stream Source.
+In home assistant  kunnen we kiezen voor de eWinLink addon of voor general camera. Bij deze kiezen we voor general camera. Hiervoor hebben we een RSTP addres nodig. Deze kunnen we vinden bij camera instellingen -> meer isntellingen en rtsp. Om de camera toe te voegen ga je naar devices en klik je add device. De RSTP url plaats je dan in de bar Stream Source.
 <!-- ![camera](./img/Generic_camera.png) -->
 <img src="./img/Generic_camera.png" alt="drawing" style="width:200px;"/>
 
