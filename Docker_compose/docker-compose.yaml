@@ -1,0 +1,66 @@
+version: "3.0"
+
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    ports:
+      - "8123:8123"
+    volumes:
+      - ./opt/homeassistant/config:/config
+      - ./etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    privileged: true
+    # network_mode: host
+
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    volumes:
+      - ./opt/mosquitto:/mosquitto
+      - ./opt/mosquitto/data:/mosquitto/data
+      - ./opt/mosquitto/log:/mosquitto/log
+    ports:
+      - 1883:1883
+      - 9001:9001
+
+  influxdb:
+    image: "influxdb:1.8"
+    container_name: influxdb
+    restart: unless-stopped
+    volumes:
+      - ./opt/influx:/var/lib/influxdb
+    environment:
+      INFLUXDB_DB: cdem
+      # - INFLUXDB_ADMIN_USER=iot
+      # - INFLUXDB_ADMIN_PASSWORD=iot_lab1234
+    ports:
+      - 8086:8086
+
+  grafana:
+    depends_on:
+      - influxdb
+    image: grafana/grafana:latest
+    container_name: grafana
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_SECURITY_COOKIE_SAMESITE=none
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+    ports:
+      - "3000:3000"
+    volumes:
+      # - ./opt/grafana/provisioning:/etc/grafana/provisioning
+      - ./opt/grafana/Data:/var/lib/grafana
+      # - ./opt/grafana/config.ini:/etc/grafana/grafana.ini
+
+  nodered:
+    container_name: nodered
+    image: nodered/node-red:latest
+    volumes:
+      - ./opt/nodered/:/data
+    ports:
+      - "1880:1880"
+    user: 'root'

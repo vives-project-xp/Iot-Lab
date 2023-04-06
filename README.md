@@ -21,6 +21,12 @@ Dit project is gerealiseerd op home assistant. Deze home assitant krijgt alle da
 
 ## Installatie
 
+### Docker versie
+
+[Docker versie](./Docker_compose/Readme.md)
+
+
+
 ### Home assistant os
 
 1. download raspberry pi imager op de volgende [website](https://www.raspberrypi.com/software/)
